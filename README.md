@@ -5,9 +5,8 @@
     <strong>A simple and lightweight Twitter API wrapper.</strong><br><br>
     <img src="https://forthebadge.com/images/badges/made-with-python.svg" height="30" />&nbsp;
     <img src="https://forthebadge.com/images/badges/fuck-it-ship-it.svg" height="30" />&nbsp;
-    <a href="https://zekro.de/discord"><img src="https://img.shields.io/discord/307084334198816769.svg?logo=discord&style=for-the-badge" height="30"></a>
-    <!-- <br/><br/> -->
-    <!-- <a href="https://travis-ci.org/zekroTJA/myrunes"><img alt="Travis (.org)" src="https://img.shields.io/travis/zekrotja/myrunes.svg?logo=travis&style=for-the-badge"></a> -->
+    <a href="https://zekro.de/discord"><img src="https://img.shields.io/discord/307084334198816769.svg?logo=discord&style=for-the-badge" height="30"></a>&nbsp;
+    <a href="https://travis-ci.org/zekroTJA/pytter"><img alt="Travis (.org)" height="30" src="https://img.shields.io/travis/zekrotja/pytter.svg?logo=travis&style=for-the-badge"></a>
 </div>
 
 ---

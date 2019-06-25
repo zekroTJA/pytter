@@ -16,7 +16,7 @@
 > **ATTENTION**  
 This project is in an very early state of development, so, neither API coverage as same as functionality is guaranteed. Also, I am not that convenient with python, so, feel free to contribute a pull request or issue if something is improvable.
 
-pytter is a work in progress Twitter API wrapper focused on light design and simple implementation. Currently, pytter will only support the Tweet, Direct messaging, Media, Trends, Geo and Labs API and no Ads, Metrics or Premium API endpoints.
+pytter is a work in progress Twitter API wrapper focused on light design and simple implementation. Currently, pytter will only support the Tweet, Direct messaging, Media, Trends, Geo and Labs API and no Ads, Metrics, Premium or Enterprise API endpoints.
 
 ---
 
@@ -26,6 +26,12 @@ Yeah, there are still some very good API wrappers like [sixohsix/twitter](https:
 Also, a project like that is perfect for practicing the work with API's and getting into Python, so this project also has some educational purpose. That's also why I am releasing this project at this very early state in development to - maybe - collect some improvements and ideas from more professional (Python) developers than me.
 
 ---
+
+# Development State
+
+On [**this Trello board**](https://trello.com/b/BIRVsFUC/pytter), you can see current development goals and ideas.
+
+<a href="https://trello.com/b/BIRVsFUC/pytter"><img src="https://d2k1ftgv7pobq7.cloudfront.net/meta/u/res/images/brand-assets/Logos/0099ec3754bf473d2bbf317204ab6fea/trello-logo-blue.png" width="200"/></a>
 
 # Docs 
 

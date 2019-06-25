@@ -31,7 +31,7 @@ class Tweet:
 
         self.created_at     = data.get('created_at')
         self.id             = data.get('id')
-        self.id_str         = data.get('id_str')
+        self.id_str         = data.get('id_str') or str(self.id)
         self.text           = data.get('text')
         self.source         = data.get('source')
         self.trucated       = data.get('truncated')
@@ -68,4 +68,4 @@ class Tweet:
     def delete(self) -> object:
         if not self._session:
             raise Exception('session is not set to tweet instance')
-        return self._session.destroy(self.id or self.id_str)
+        return self._session.statuses_destroy(self.id or self.id_str)

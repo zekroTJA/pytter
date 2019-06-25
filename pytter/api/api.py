@@ -5,7 +5,7 @@ import requests
 from requests_oauthlib import OAuth1, OAuth2
 
 from .credentials import Credentials
-from .exceptions import RateLimitException
+from .exceptions import RateLimitException, NoneResponseException
 from ..utils import utils
 from ..objects import Tweet, Media
 from ..utils import FileInfo
@@ -236,7 +236,7 @@ class APISession:
             file_info.close()
 
         if res == None:
-            raise Exception('res was None')
+            raise NoneResponseException()
 
         return Media(res.json())
 
@@ -277,14 +277,14 @@ class APISession:
             if not max_attachable:
                 max_attachable = i
 
-        if max_attachable > len(media):
+        if max_attachable and max_attachable > len(media):
             raise Exception('you can only attach up to {} files using this attachment type.'
                 .format(max_attachable))
 
         for f in files:
             yield self.upload_file_cunked(f, close_after=close_after)
 
-    def update(self, status: str, media: [list, str] = None, **kwargs) -> Tweet:
+    def statuses_update(self, status: str, media: [list, str] = None, **kwargs) -> Tweet:
         """
         Create a Tweet with specified content.
 
@@ -334,11 +334,11 @@ class APISession:
         
         res = self.request('POST', 'statuses/update.json', data=data)
         if not res:
-            raise Exception('response was None')
+            raise NoneResponseException()
 
         return Tweet(res, self)
 
-    def destroy(self, id: [str, int], **kwargs) -> Tweet:
+    def statuses_destroy(self, id: [str, int], **kwargs) -> Tweet:
         """
         Delete a tweet.
 
@@ -365,6 +365,42 @@ class APISession:
 
         res = self.request('POST', 'statuses/destroy/{}.json'.format(id), data=data)
         if not res:
-            raise Exception('response was None')
+            raise NoneResponseException()
 
         return Tweet(res)
+
+    def statuses_show(self, id: [str, int], **kwargs) -> Tweet:
+        """
+        Fetches a single tweet by its ID. The tweets author
+        user object will be in the response Tweet object.
+        If there was no tweet found by the specified ID, the
+        result will be `None`.
+
+        Parameters
+        ==========
+
+        id: [str, int]
+            ID of the Tweet.
+
+        **kwargs:
+            Additional agruments passed directly to the 
+            request parameters.
+
+        Returns
+        =======
+
+        Tweet
+            Result Tweet obect or `None`.
+        """
+
+        data = {}
+        for k, v in kwargs.items():
+            data[k] = v
+
+        data['id'] = id
+
+        res = self.request('GET', 'statuses/show.json', params=data)
+        if not res:
+            raise NoneResponseException()
+        
+        return Tweet(res, self)

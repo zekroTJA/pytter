@@ -24,9 +24,9 @@ class ClientTest(unittest.TestCase):
         client = Client(self.credentials)
         self.assertIsNotNone(client)
 
-    def test_update_and_delete(self):
+    def test_status_update_and_delete(self):
         client = Client(self.credentials)
-        res = client.update(self.TEST_CTX, media=self.TEST_IMG, )
+        res = client.status_update(self.TEST_CTX, media=self.TEST_IMG)
         self.assertIsNotNone(res)
         self.assertTrue(res.text.startswith(self.TEST_CTX))
         self.assertEqual(res.entities.hashtags[0], self.TEST_HT)
@@ -34,6 +34,15 @@ class ClientTest(unittest.TestCase):
 
         res = res.delete()
         self.assertIsNotNone(res)
+
+    def test_status(self):
+        client = Client(self.credentials)
+        res = client.status_update(self.TEST_CTX)
+        self.assertIsNotNone(res)
+        rec = client.status(res.id)
+        self.assertEqual(res.text, rec.text)
+        rec.delete()
+
 
 if __name__ == '__main__':
     unittest.main()

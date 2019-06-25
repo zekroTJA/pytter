@@ -21,7 +21,7 @@ class Client:
     def __init__(self, credentials: Credentials):
         self._session = APISession(credentials)
 
-    def update(self, 
+    def status_update(self, 
         text: str, 
         media: list = [],
         possibly_sensitive: bool = False,
@@ -75,7 +75,7 @@ class Client:
             Default: False
         """
 
-        return self._session.update(
+        return self._session.statuses_update(
             status=text, 
             media=media,
             possibly_sensitive=possibly_sensitive,
@@ -84,7 +84,7 @@ class Client:
             place=((place.id if type(place) == Place else place) if place else None),
             display_coordinates=display_coordinates)
 
-    def delete(self, tweet_id: [str, int]) -> Tweet:
+    def status_delete(self, tweet_id: [str, int]) -> Tweet:
         """
         Delete a tweet by its ID.
 
@@ -101,4 +101,42 @@ class Client:
             The tweet object of the deleted tweet.
         """
         
-        return self._session.destroy(tweet_id)
+        return self._session.statuses_destroy(tweet_id)
+
+    def status(self, tweet_id: [str, int],
+        include_entities: bool = True,
+        include_ext_alt_text: bool = True) -> Tweet:
+        """
+        Get Tweet by its ID. If there was no Tweet
+        found by this ID, the result will be None.
+
+        Parameters
+        ==========
+
+        tweet_id: [str, int]
+            ID of the Tweet to be fetched.
+
+        include_entities: bool
+            Enclude Tweet entities.
+            Default: True
+
+        include_ext_alt_text: bool
+            Include Tweets alt text, if set.
+            Default: True
+
+        Returns
+        =======
+
+        Tweet
+            Resulting Tweet or `None`.
+        """
+
+        return self._session.statuses_show(id=tweet_id,
+            include_entities=include_entities,
+            include_ext_alt_text=include_ext_alt_text)
+
+    def tweet(self, **kwargs) -> Tweet:
+        """
+        Alias for Client#status.
+        """
+        return self.status(**kwargs)

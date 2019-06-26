@@ -5,13 +5,28 @@ import requests
 from requests_oauthlib import OAuth1, OAuth2
 
 from .credentials import Credentials
-from .exceptions import RateLimitException, NoneResponseException
+from .exceptions import (
+    RateLimitException, NoneResponseException, 
+    ParameterOutOfBoundsException
+)
+
 from ..utils import utils
 from ..objects import Tweet, Media
 from ..utils import FileInfo
 
 
 class APISession:
+    """
+    Twitter API wrapper session initialized by passed
+    credentials and options.
+
+    Parameters
+    ==========
+
+    credentials: Credentials
+        APP or User credentials to authenticate against
+        the Twitter API.
+    """
 
     API_ROOT_URI        = 'https://api.twitter.com'
     API_VERSION         = '1.1'
@@ -32,6 +47,10 @@ class APISession:
             self._oauth = self._credentials.to_oauth1()
         else:
             self.obtain_user_context_token()
+
+    ############################
+    # GENERAL REQUEST HANDLING #
+    ############################
 
     def request(self, method: str, resource_path: str, **kwargs):
         """
@@ -105,6 +124,10 @@ class APISession:
         body = res.json()
 
         self._oauth = OAuth2(token=body)
+
+    ##############
+    # UPLOAD API #
+    ##############
 
     def upload_media_request(self, command=None, params={}, raw=None, **kwargs):
         """
@@ -284,6 +307,10 @@ class APISession:
         for f in files:
             yield self.upload_file_cunked(f, close_after=close_after)
 
+    ################
+    # STATUSES API #
+    ################
+
     def statuses_update(self, status: str, media: [list, str] = None, **kwargs) -> Tweet:
         """
         Create a Tweet with specified content.
@@ -404,3 +431,60 @@ class APISession:
             raise NoneResponseException()
         
         return Tweet(res, self)
+
+    def statuses_lookup(self, ids: list, raise_on_none: bool = False, **kwargs) -> dict:
+        """
+        Get details about up to 100 tweets. The returned
+        dictionary keys represent the original requested
+        IDs of the Tweets and are paired with the 
+        corresponding Tweet object, if found. Defaultly,
+        the value can be `None` if no Tweet was found
+        matching the given ID.
+
+        Parameters
+        ==========
+
+        ids: list
+            List of tweet IDs to be fetched.
+
+        raise_on_none: boolean
+            Raise an `NoneResponseException` exception if
+            a Tweet could not be fetched for a given ID.
+
+        **kwargs:
+            Additional agruments passed directly to the 
+            request parameters.
+
+        Returns
+        =======
+
+        dict
+            Tweet IDs as keys paired with the corresponding
+            result Tweet object, which can be `None`.
+        """
+
+        ln = len(ids)
+        if ln < 1 or ln > 100:
+            raise ParameterOutOfBoundsException('index must be in range [1, 100]')
+
+        data = {}
+        for k, v in kwargs.items():
+            data[k] = v
+
+        data['id'] = ','.join([str(id) for id in ids])
+        data['map'] = True
+
+        res = self.request('GET', 'statuses/lookup.json', params=data)
+    
+        if not res or 'id' not in res:
+            raise NoneResponseException()
+
+        tweets = {}
+
+        for tid, obj in res.get('id').items():
+            t = Tweet(obj)
+            if not t and raise_on_none:
+                raise NoneResponseException()
+            tweets[tid] = t
+
+        return tweets

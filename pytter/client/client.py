@@ -8,8 +8,8 @@ from ..objects import Tweet, Place
 
 class Client:
     """
-    Client wraps API requests to the
-    Twitter API.
+    Simple and easy to use API client which wraps
+    around APISession.
 
     Parameters
     ==========
@@ -117,7 +117,7 @@ class Client:
             ID of the Tweet to be fetched.
 
         include_entities: bool
-            Enclude Tweet entities.
+            Include Tweet entity objects.
             Default: True
 
         include_ext_alt_text: bool
@@ -135,8 +135,63 @@ class Client:
             include_entities=include_entities,
             include_ext_alt_text=include_ext_alt_text)
 
+    def statuses(self, tweet_ids: list, 
+        include_entities: bool = True,
+        include_ext_alt_text: bool = True,
+        raise_on_none = False) -> dict:
+        """
+        Gets up to 100 tweets by their IDs.The result will be
+        a dictionary with keys representing the originally
+        requested Tweet ID paired with the fetched Tweet
+        object, if found. Else, the value will be `None`.
+
+        Parameters
+        ==========
+        
+        tweet_ids: list
+            List of Tweet IDs to be fetched.
+        
+        include_entities: bool
+            Include Tweets entity objects.
+            Default: True
+        
+        include_ext_alt_text: bool
+            Include Tweets alt texts, if set.
+            Default: True
+        
+        raise_on_none: bool
+            If this is set to `True`, an `NoneResponseException`
+            will be risen if one of the Tweets is `None` (not found,
+            not existent or not accessable).
+
+        Returns
+        =======
+
+        dict
+            Tweet IDs as keys paired with the corresponding
+            result Tweet object, which can be `None`.
+        """
+
+        return self._session.statuses_lookup(
+            ids=tweet_ids,
+            raise_on_none=raise_on_none,
+            include_entities=include_entities,
+            include_ext_alt_text=include_ext_alt_text)
+
+    ###########
+    # ALIASES #
+    ###########
+
     def tweet(self, **kwargs) -> Tweet:
         """
         Alias for Client#status.
         """
+
         return self.status(**kwargs)
+
+    def tweets(self, **kwargs) -> dict:
+        """
+        Alias for Client#statuses.
+        """
+
+        return self.statuses(**kwargs)

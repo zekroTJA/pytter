@@ -43,6 +43,12 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(res.text, rec.text)
         rec.delete()
 
+    def test_statuses(self):
+        client = Client(self.credentials)
+        t1 = client.status_update('my tweet 1')
+        t2 = client.status_update('my tweet 2')
+        res = client.statuses((t1.id, t2.id, 1231231))
+
 
 if __name__ == '__main__':
     unittest.main()

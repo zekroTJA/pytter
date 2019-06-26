@@ -482,9 +482,8 @@ class APISession:
         tweets = {}
 
         for tid, obj in res.get('id').items():
-            t = Tweet(obj)
-            if not t and raise_on_none:
+            if not obj and raise_on_none:
                 raise NoneResponseException()
-            tweets[tid] = t
+            tweets[tid] = Tweet(obj, self) if obj else None
 
         return tweets

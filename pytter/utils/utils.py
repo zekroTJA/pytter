@@ -9,18 +9,17 @@ def file_from_url(url: str):
     file_from_url requests a file from an URL.
     Raises an exception if the request fails.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    url : str
-        The resource URL.
+    - `url : str`
+      The resource URL.
 
-    Returns
-    =======
+    **Returns**
 
-    _TemporaryFileWrapper
-        Requested file as temporary file handler. 
+    - `_TemporaryFileWrapper`
+      Requested file as temporary file handler. 
     """
+    
     CHUNK_SIZE = 1024*1024
 
     file = tempfile.NamedTemporaryFile()
@@ -40,19 +39,18 @@ def try_get_file(media: str) -> FileInfo:
     try_get_file tries to get a file either by a
     local file path or by a HTTP(S) URL.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    media : str
-        A local file location or a HTTP(S) link
-        to an online file resource.
+    - `media : str`
+      A local file location or a HTTP(S) link
+      to an online file resource.
 
-    Returns
-    =======
+    **Returns**
 
-    FileInfo
-        The FileInfo object of a file.
+    - `FileInfo`
+      The FileInfo object of a file.
     """
+
     file_handler = None
 
     if media.startswith('http'):
@@ -69,19 +67,22 @@ def chunk_file(file_info: FileInfo, chunk_size: int):
     chunk_file splits a file by its size into chunks of
     the defined chunk_size. This function must be used
     as an interator.
-        for chunk in chunk_file(file_info, 1024):
+
+    ```python
+    for chunk in chunk_file(file_info, 1024):
             # ...
+    ```
 
-    Parameters
-    ==========
+    **Parameters**
 
-    file_info : FileInfo
-        FileInfo instance of an open file which
-        can be read from.
+    - `file_info : FileInfo`  
+      FileInfo instance of an open file which
+      can be read from.
 
-    chunk_size : int
-        The byte-size of a single chunk.
+    - `chunk_size : int`  
+      The byte-size of a single chunk.
     """
+
     n_chunks = int(file_info.size / chunk_size)
     rest = file_info.size - n_chunks * chunk_size
 
@@ -104,18 +105,17 @@ def sort_dict_alphabetically(d: dict) -> dict:
     a dictionary alphabetically by keys and returns
     the result as new dictionary.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    d : dict
-        Dictionary which should be sorted.
+    - `d : dict`  
+      Dictionary which should be sorted.
 
-    Returns
-    =======
+    **Returns**
 
-    dict
-        Alphabetically sorted dictionary.
+    - `dict`  
+      Alphabetically sorted dictionary.
     """
+
     out = {}
     keys = sorted(d.keys())
     for k in keys:
@@ -129,20 +129,19 @@ def check_upload_compatibility(file_info: FileInfo) -> int:
     uplaoded to Twitter. If the file is not compatible,
     an exception will be raised.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    file_info : FileInfo
-        FileInfo instance of a local or online file.
+    - `file_info : FileInfo`  
+      FileInfo instance of a local or online file.
 
-    Returns
-    =======
+    **Returns**
     
-    int
-        If the check succeeds, the function will return
-        the maximum ammount of files you can attach to
-        a tweet.
+    - `int`  
+      If the check succeeds, the function will return
+      the maximum ammount of files you can attach to
+      a tweet.
     """
+
     IMAGE_TYPE_MAXSIZE = Megabyte(5)
     IMAGE_TYPES = (
         'image/jpeg',

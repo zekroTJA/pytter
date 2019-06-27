@@ -39,25 +39,22 @@ class APISession:
         credentials.
         This method raises an exception on failed authentication or request.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        method : str
-            Request method.
+        - `method : str`  
+          Request method.
 
-        resource_path : str
+        - `resource_path : str`  
+          Path to the requested resource (without root URI).
+          Leading '/' will be cut off.
 
-            Path to the requested resource (without root URI).
-            Leading '/' will be cut off.
+        - `**kwargs`  
+          Optional arguments passed to request.request()
 
-        **kwargs
-            Optional arguments passed to request.request()
-
-        Returns
-        =======
+        **Returns**
         
-        Object
-            JSON-parsed response body.
+        - `Object`  
+          JSON-parsed response body.
         """
 
         res = self._session.request(
@@ -110,24 +107,23 @@ class APISession:
         """
         Wrap a request to initiate, append or finalize a chunked media upload.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        command : str
-            Must be 'INIT', 'APPEND' or 'FINALIZE'.
-            If 'raw' is set, this must not be passed.
+        - `command : str`  
+          Must be 'INIT', 'APPEND' or 'FINALIZE'.
+          If 'raw' is set, this must not be passed.
 
-        params : dict
-            Request body parameters.
-            If 'raw' is set, this must not be passed.
+        - `params : dict`  
+          Request body parameters.
+          If 'raw' is set, this must not be passed.
 
-        raw
-            Raw data used as reuqest body. 
-            This option overwrites 'command' and 'params'.
+        - `raw`  
+          Raw data used as reuqest body. 
+          This option overwrites 'command' and 'params'.
 
-        **kwargs:
-            Additional arguments which will be passed to
-            the request method.
+        - `**kwargs:`  
+          Additional arguments which will be passed to
+          the request method.
         """
 
         if raw is None:
@@ -154,23 +150,21 @@ class APISession:
         can be uploaded to twitter and then tries to upload the file via 
         the chunked twitter media upload endpoint.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        media : str
-            Either a local file location or a HTTP(S) URL
-            to an online file resource.
+        - `media : str`  
+          Either a local file location or a HTTP(S) URL
+          to an online file resource.
 
-        close_after: bool
-            Wether the file info reader should be closed
-            after upload or not.
-            Default: False
+        - `close_after: bool`  
+          Wether the file info reader should be closed
+          after upload or not.
+          *Default: `False`*
 
-        Returns
-        =======
+        **Returns**
 
-        Media
-            Result media object.
+        - `Media`  
+          Result media object.
         """
 
         # --- INIT ------------------------------------------------------------
@@ -247,24 +241,22 @@ class APISession:
         1 gif or 1 video. Everything else will raise an
         exception.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        media: list
-            List of media objects as path to a local file,
-            as URI to an online file which will be downloaded
-            and atatched then or an existing FileInfo object.
+        - `media: list`  
+          List of media objects as path to a local file,
+          as URI to an online file which will be downloaded
+          and atatched then or an existing FileInfo object.
         
-        close_after: bool
-            Wether to close each opened file handler after
-            uploading or not.
-            Default: False
+        - `close_after: bool`  
+          Wether to close each opened file handler after
+          uploading or not.
+          *Default: `False`*
 
-        Returns
-        =======
+        **Returns**
 
-        iter
-            Iterator of uploaded Media objects.
+        - `iter`  
+          Iterator of uploaded Media objects.
         """
 
         max_attachable = None
@@ -288,30 +280,28 @@ class APISession:
         """
         Create a Tweet with specified content.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        status : str
-            The status text. This can not be None, but empty ('')
-            if you do not want to have text content in your tweet.
+        - `status : str`  
+          The status text. This can not be None, but empty ('')
+          if you do not want to have text content in your tweet.
 
-        img : str
-            Image media identifier.
-            This can be either a local file location or an
-            online file linked by a HHTP(S) URL.
+        - `img : str`  
+          Image media identifier.
+          This can be either a local file location or an
+          online file linked by a HHTP(S) URL.
 
-        **kwargs
-            Additional keyword arguments which will be directly
-            passed to the request arguments.
-            You should only use valid arguments supported by the
-            POST statuses/update endpoint:
-            https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+        - `**kwargs`  
+          Additional keyword arguments which will be directly
+          passed to the request arguments.
+          You should only use valid arguments supported by the
+          POST statuses/update endpoint:
+          https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
 
-        Returns
-        =======
+        **Returns**
 
-        Tweet
-            The result Tweet object.
+        - `Tweet`  
+          The result Tweet object.
         """
 
         data = {
@@ -342,21 +332,19 @@ class APISession:
         """
         Delete a tweet.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        id: [str, int]
-            ID of the tweet to delete.
+        - `id: [str, int]`  
+          ID of the tweet to delete.
 
-        **kwargs:
-            Additional agruments passed directly to the 
-            request parameters.
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
 
-        Returns
-        =======
+        **Returns**
 
-        Tweet
-            The tweet ofbject which was deleted.
+        - `Tweet`  
+          The tweet ofbject which was deleted.
         """
         
         data = {}
@@ -376,21 +364,19 @@ class APISession:
         If there was no tweet found by the specified ID, the
         result will be `None`.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        id: [str, int]
-            ID of the Tweet.
+        - `id: [str, int]`  
+          ID of the Tweet.
 
-        **kwargs:
-            Additional agruments passed directly to the 
-            request parameters.
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
 
-        Returns
-        =======
+        **Returns**
 
-        Tweet
-            Result Tweet obect or `None`.
+        - `Tweet`  
+          Result Tweet obect or `None`.
         """
 
         data = {}

@@ -41,13 +41,13 @@ class ClientTest(unittest.TestCase):
                 pass
 
     def test_init(self):
-        wait_rand()
+        if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
         self.assertIsNotNone(client)
 
     def test_status_update_and_delete(self):
-        wait_rand()
+        if self.travis_mode: wait_rand()
 
         client = Client(self.credentials)
         res = client.status_update(self.TEST_CTX, media=self.TEST_IMG)
@@ -61,7 +61,7 @@ class ClientTest(unittest.TestCase):
         self.assertIsNotNone(res)
 
     def test_status(self):
-        wait_rand()
+        if self.travis_mode: wait_rand()
 
         client = Client(self.credentials)
         res = client.status_update(self.TEST_CTX)
@@ -71,7 +71,7 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(res.text, rec.text)
 
     def test_statuses(self):
-        wait_rand()
+        if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
         res_t1 = client.status_update('my tweet 1')
@@ -87,7 +87,7 @@ class ClientTest(unittest.TestCase):
         self.assertIsNone(rec['1231231'])
 
     def test_retweets(self):
-        wait_rand()
+        if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
         o_t = client.status_update('this will be retweeted by me!')

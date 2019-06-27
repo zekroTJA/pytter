@@ -1052,6 +1052,8 @@ table {
     <li class="mono"><a href="#pytter.client.client.Client.__init__">__init__</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status">status</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_delete">status_delete</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.status_retweet">status_retweet</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.status_unretweet">status_unretweet</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_update">status_update</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.statuses">statuses</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.tweet">tweet</a></li>
@@ -1183,6 +1185,41 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="n">tweet_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet a tweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `tweet_id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to retweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The resulting Tweet containing </span>
+<span class="sd">          retweet information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke a retweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `tweet_id: [str, int]`  </span>
+<span class="sd">          The retweet ID to be revoked.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The Tweet object of the revoked retweet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
@@ -1394,6 +1431,41 @@ around APISession.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="n">tweet_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet a tweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `tweet_id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to retweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The resulting Tweet containing </span>
+<span class="sd">          retweet information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke a retweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `tweet_id: [str, int]`  </span>
+<span class="sd">          The retweet ID to be revoked.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The Tweet object of the revoked retweet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
@@ -1616,6 +1688,90 @@ found by this ID, the result will be None.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="n">tweet_id</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.status_retweet">
+    <p>def <span class="ident">status_retweet</span>(</p><p>self, tweet_id)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Retweet a tweet by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>tweet_id: [str, int]</code><br />
+  ID of the Tweet to retweet.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The resulting Tweet containing 
+  retweet information.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.status_retweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.status_retweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">status_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retweet a tweet by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `tweet_id: [str, int]`  </span>
+<span class="sd">      ID of the Tweet to retweet.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The resulting Tweet containing </span>
+<span class="sd">      retweet information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.status_unretweet">
+    <p>def <span class="ident">status_unretweet</span>(</p><p>self, tweet_id)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Revoke a retweet by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>tweet_id: [str, int]</code><br />
+  The retweet ID to be revoked.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The Tweet object of the revoked retweet.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.status_unretweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.status_unretweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">status_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Revoke a retweet by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `tweet_id: [str, int]`  </span>
+<span class="sd">      The retweet ID to be revoked.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The Tweet object of the revoked retweet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
 </pre></div>
 
   </div>

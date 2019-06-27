@@ -104,6 +104,41 @@ class Client:
         
         return self._session.statuses_destroy(tweet_id)
 
+    def status_retweet(self, tweet_id: [str, int]) -> Tweet:
+        """
+        Retweet a tweet by its ID.
+
+        **Parameters**
+
+        - `tweet_id: [str, int]`  
+          ID of the Tweet to retweet.
+
+        **Returns**
+
+        - `Tweet`  
+          The resulting Tweet containing 
+          retweet information.
+        """
+
+        return self._session.statuses_retweet(id=tweet_id)
+
+    def status_unretweet(self, tweet_id: [str, int]) -> Tweet:
+        """
+        Revoke a retweet by its ID.
+
+        **Parameters**
+
+        - `tweet_id: [str, int]`  
+          The retweet ID to be revoked.
+
+        **Returns**
+
+        - `Tweet`  
+          The Tweet object of the revoked retweet.
+        """
+
+        return self._session.statuses_unretweet(id=tweet_id)
+
     def status(self, tweet_id: [str, int],
         include_entities: bool = True,
         include_ext_alt_text: bool = True) -> Tweet:

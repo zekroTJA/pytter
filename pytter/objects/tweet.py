@@ -3,6 +3,11 @@ from .user import User
 from .geo import Coordinates, Place
 
 
+class NoSessionException(Exception):
+    MESSAGE = 'session is not set to tweet instance'
+    def __init__(self):
+        super().__init__(self.MESSAGE)
+
 class TweetEntities:
     """
     Collection of tweet entities like a list of hashtags, attached media
@@ -66,6 +71,56 @@ class Tweet:
         self.favorited  = data.get('retweeted')
 
     def delete(self) -> object:
+        """
+        Delete this tweet.
+
+        **Returns**
+
+        - `Tweet`  
+          This Tweet object.
+        """
         if not self._session:
-            raise Exception('session is not set to tweet instance')
+            raise NoSessionException()
         return self._session.statuses_destroy(self.id or self.id_str)
+
+    def retweet(self) -> object:
+        """
+        Retweet this tweet.
+
+        **Returns**
+
+        - `Tweet`  
+          This Tweet object containing
+          retweet information.
+        """
+        
+        if not self._session:
+            raise NoSessionException()
+
+        return self._session.statuses_retweet(self.id or self.id_str)
+
+    def un_retweet(self, do_not_raise: bool = False) -> object:
+        """
+        Revoke this retweet.
+
+        **Parameters**
+
+        - `do_not_raise: bool`  
+          Do not raise an exception if the tweet is
+          not a retweet and can not be revoked.
+
+        **Returns**
+
+        - `Tweet`  
+          This Tweet object.
+        """
+
+        if not self._session:
+            raise NoSessionException()
+
+        if not self.retweeted_status:
+            if do_not_raise:
+                return None
+            raise Exception('a non-retweet can not be revoked')
+
+        return self._session.statuses_unretweet(self.id or self.id_str)

@@ -427,26 +427,24 @@ class APISession:
         the value can be `None` if no Tweet was found
         matching the given ID.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        ids: list
-            List of tweet IDs to be fetched.
+        - `ids: list`  
+          List of tweet IDs to be fetched.
 
-        raise_on_none: boolean
-            Raise an `NoneResponseException` exception if
-            a Tweet could not be fetched for a given ID.
+        - `raise_on_none: boolean`  
+          Raise an `NoneResponseException` exception if
+          a Tweet could not be fetched for a given ID.
 
-        **kwargs:
-            Additional agruments passed directly to the 
-            request parameters.
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
 
-        Returns
-        =======
+        **Returns**
 
-        dict
-            Tweet IDs as keys paired with the corresponding
-            result Tweet object, which can be `None`.
+        - `dict`  
+          Tweet IDs as keys paired with the corresponding
+          result Tweet object, which can be `None`.
         """
 
         ln = len(ids)
@@ -473,3 +471,62 @@ class APISession:
             tweets[tid] = Tweet(obj, self) if obj else None
 
         return tweets
+
+    def statuses_retweet(self, id: [str, int], **kwargs) -> Tweet:
+        """
+        Retweet a Tweet by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the Tweet to retweet.
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `Tweet`  
+          Resulting Tweet object containing retweet 
+          data information.
+        """
+
+        data = {}
+        for k, v in kwargs.items():
+            data[k] = v
+        
+        res = self.request('POST', 'statuses/retweet/{}.json'.format(id), params=data)
+        if not res:
+            return NoneResponseException()
+
+        return Tweet(res, self)
+
+    def statuses_unretweet(self, id: [str, int], **kwargs) -> Tweet:
+        """
+        Revoke a retweet by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the Tweet to unretweet.
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `Tweet`  
+          Tweet object of the revoked retweet.
+        """
+
+        data = {}
+        for k, v in kwargs.items():
+            data[k] = v
+
+        res = self.request('POST', 'statuses/unretweet/{}.json'.format(id), params=data)
+        if not res:
+            return NoneResponseException()
+
+        return Tweet(res)

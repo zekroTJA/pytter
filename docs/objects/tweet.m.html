@@ -1045,12 +1045,23 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#pytter.objects.tweet.NoSessionException">NoSessionException</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.objects.tweet.NoSessionException.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#pytter.objects.tweet.Tweet">Tweet</a></span>
         
           
   <ul>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.__init__">__init__</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.delete">delete</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.retweet">retweet</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.un_retweet">un_retweet</a></li>
   </ul>
 
         </li>
@@ -1086,6 +1097,11 @@ table {
 <span class="kn">from</span> <span class="nn">.user</span> <span class="kn">import</span> <span class="n">User</span>
 <span class="kn">from</span> <span class="nn">.geo</span> <span class="kn">import</span> <span class="n">Coordinates</span><span class="p">,</span> <span class="n">Place</span>
 
+
+<span class="k">class</span> <span class="nc">NoSessionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;session is not set to tweet instance&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">TweetEntities</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1150,9 +1166,59 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">favorited</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;retweeted&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete this tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;session is not set to tweet instance&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet this tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object containing</span>
+<span class="sd">          retweet information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke this retweet.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `do_not_raise: bool`  </span>
+<span class="sd">          Do not raise an exception if the tweet is</span>
+<span class="sd">          not a retweet and can not be revoked.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">retweeted_status</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">do_not_raise</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;a non-retweet can not be revoked&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1163,6 +1229,79 @@ table {
 
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="pytter.objects.tweet.NoSessionException" class="name">class <span class="ident">NoSessionException</span></p>
+      
+  
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.NoSessionException', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.NoSessionException" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">NoSessionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;session is not set to tweet instance&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.objects.tweet.NoSessionException">NoSessionException</a></li>
+          <li><a href="/builtins.Exception.ext">builtins.Exception</a></li>
+          <li><a href="/builtins.BaseException.ext">builtins.BaseException</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="pytter.objects.tweet.NoSessionException.MESSAGE" class="name">var <span class="ident">MESSAGE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.tweet.NoSessionException.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.tweet.NoSessionException.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.NoSessionException.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.NoSessionException.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
       
       <div class="item">
       <p id="pytter.objects.tweet.Tweet" class="name">class <span class="ident">Tweet</span></p>
@@ -1222,9 +1361,59 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
         <span class="bp">self</span><span class="o">.</span><span class="n">favorited</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;retweeted&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete this tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;session is not set to tweet instance&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet this tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object containing</span>
+<span class="sd">          retweet information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke this retweet.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `do_not_raise: bool`  </span>
+<span class="sd">          Do not raise an exception if the tweet is</span>
+<span class="sd">          not a retweet and can not be revoked.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">retweeted_status</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">do_not_raise</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;a non-retweet can not be revoked&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1301,13 +1490,112 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
 
     
   
+    <div class="desc"><p>Delete this tweet.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  This Tweet object.</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.delete', this);">Show source &equiv;</a></p>
   <div id="source-pytter.objects.tweet.Tweet.delete" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Delete this tweet.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      This Tweet object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;session is not set to tweet instance&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.tweet.Tweet.retweet">
+    <p>def <span class="ident">retweet</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Retweet this tweet.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  This Tweet object containing
+  retweet information.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.retweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.retweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retweet this tweet.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      This Tweet object containing</span>
+<span class="sd">      retweet information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.tweet.Tweet.un_retweet">
+    <p>def <span class="ident">un_retweet</span>(</p><p>self, do_not_raise=False)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Revoke this retweet.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>do_not_raise: bool</code><br />
+  Do not raise an exception if the tweet is
+  not a retweet and can not be revoked.</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  This Tweet object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.un_retweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.un_retweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Revoke this retweet.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `do_not_raise: bool`  </span>
+<span class="sd">      Do not raise an exception if the tweet is</span>
+<span class="sd">      not a retweet and can not be revoked.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      This Tweet object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">retweeted_status</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">do_not_raise</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;a non-retweet can not be revoked&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 </pre></div>
 
   </div>

@@ -1054,7 +1054,9 @@ table {
     <li class="mono"><a href="#pytter.api.api.APISession.request">request</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_destroy">statuses_destroy</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_lookup">statuses_lookup</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.statuses_retweet">statuses_retweet</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_show">statuses_show</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.statuses_unretweet">statuses_unretweet</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_update">statuses_update</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.upload_attachments">upload_attachments</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.upload_file_cunked">upload_file_cunked</a></li>
@@ -1510,26 +1512,24 @@ table {
 <span class="sd">        the value can be `None` if no Tweet was found</span>
 <span class="sd">        matching the given ID.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ==========</span>
+<span class="sd">        **Parameters**</span>
 
-<span class="sd">        ids: list</span>
-<span class="sd">            List of tweet IDs to be fetched.</span>
+<span class="sd">        - `ids: list`  </span>
+<span class="sd">          List of tweet IDs to be fetched.</span>
 
-<span class="sd">        raise_on_none: boolean</span>
-<span class="sd">            Raise an `NoneResponseException` exception if</span>
-<span class="sd">            a Tweet could not be fetched for a given ID.</span>
+<span class="sd">        - `raise_on_none: boolean`  </span>
+<span class="sd">          Raise an `NoneResponseException` exception if</span>
+<span class="sd">          a Tweet could not be fetched for a given ID.</span>
 
-<span class="sd">        **kwargs:</span>
-<span class="sd">            Additional agruments passed directly to the </span>
-<span class="sd">            request parameters.</span>
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        =======</span>
+<span class="sd">        **Returns**</span>
 
-<span class="sd">        dict</span>
-<span class="sd">            Tweet IDs as keys paired with the corresponding</span>
-<span class="sd">            result Tweet object, which can be `None`.</span>
+<span class="sd">        - `dict`  </span>
+<span class="sd">          Tweet IDs as keys paired with the corresponding</span>
+<span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
@@ -1556,6 +1556,65 @@ table {
             <span class="n">tweets</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">obj</span> <span class="k">else</span> <span class="bp">None</span>
 
         <span class="k">return</span> <span class="n">tweets</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet a Tweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to retweet.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          Resulting Tweet object containing retweet </span>
+<span class="sd">          data information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke a retweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to unretweet.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          Tweet object of the revoked retweet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1992,26 +2051,24 @@ credentials and options.</p>
 <span class="sd">        the value can be `None` if no Tweet was found</span>
 <span class="sd">        matching the given ID.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ==========</span>
+<span class="sd">        **Parameters**</span>
 
-<span class="sd">        ids: list</span>
-<span class="sd">            List of tweet IDs to be fetched.</span>
+<span class="sd">        - `ids: list`  </span>
+<span class="sd">          List of tweet IDs to be fetched.</span>
 
-<span class="sd">        raise_on_none: boolean</span>
-<span class="sd">            Raise an `NoneResponseException` exception if</span>
-<span class="sd">            a Tweet could not be fetched for a given ID.</span>
+<span class="sd">        - `raise_on_none: boolean`  </span>
+<span class="sd">          Raise an `NoneResponseException` exception if</span>
+<span class="sd">          a Tweet could not be fetched for a given ID.</span>
 
-<span class="sd">        **kwargs:</span>
-<span class="sd">            Additional agruments passed directly to the </span>
-<span class="sd">            request parameters.</span>
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        =======</span>
+<span class="sd">        **Returns**</span>
 
-<span class="sd">        dict</span>
-<span class="sd">            Tweet IDs as keys paired with the corresponding</span>
-<span class="sd">            result Tweet object, which can be `None`.</span>
+<span class="sd">        - `dict`  </span>
+<span class="sd">          Tweet IDs as keys paired with the corresponding</span>
+<span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
@@ -2038,6 +2095,65 @@ credentials and options.</p>
             <span class="n">tweets</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">obj</span> <span class="k">else</span> <span class="bp">None</span>
 
         <span class="k">return</span> <span class="n">tweets</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retweet a Tweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to retweet.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          Resulting Tweet object containing retweet </span>
+<span class="sd">          data information.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Revoke a retweet by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the Tweet to unretweet.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          Tweet object of the revoked retweet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2318,19 +2434,29 @@ IDs of the Tweets and are paired with the
 corresponding Tweet object, if found. Defaultly,
 the value can be <code>None</code> if no Tweet was found
 matching the given ID.</p>
-<h1>Parameters</h1>
-<p>ids: list
-    List of tweet IDs to be fetched.</p>
-<p>raise_on_none: boolean
-    Raise an <code>NoneResponseException</code> exception if
-    a Tweet could not be fetched for a given ID.</p>
-<p>**kwargs:
-    Additional agruments passed directly to the 
-    request parameters.</p>
-<h1>Returns</h1>
-<p>dict
-    Tweet IDs as keys paired with the corresponding
-    result Tweet object, which can be <code>None</code>.</p></div>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>ids: list</code><br />
+  List of tweet IDs to be fetched.</p>
+</li>
+<li>
+<p><code>raise_on_none: boolean</code><br />
+  Raise an <code>NoneResponseException</code> exception if
+  a Tweet could not be fetched for a given ID.</p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>dict</code><br />
+  Tweet IDs as keys paired with the corresponding
+  result Tweet object, which can be <code>None</code>.</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_lookup', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession.statuses_lookup" class="source">
@@ -2342,21 +2468,19 @@ matching the given ID.</p>
 <span class="sd">    corresponding Tweet object, if found. Defaultly,</span>
 <span class="sd">    the value can be `None` if no Tweet was found</span>
 <span class="sd">    matching the given ID.</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ==========</span>
-<span class="sd">    ids: list</span>
-<span class="sd">        List of tweet IDs to be fetched.</span>
-<span class="sd">    raise_on_none: boolean</span>
-<span class="sd">        Raise an `NoneResponseException` exception if</span>
-<span class="sd">        a Tweet could not be fetched for a given ID.</span>
-<span class="sd">    **kwargs:</span>
-<span class="sd">        Additional agruments passed directly to the </span>
-<span class="sd">        request parameters.</span>
-<span class="sd">    Returns</span>
-<span class="sd">    =======</span>
-<span class="sd">    dict</span>
-<span class="sd">        Tweet IDs as keys paired with the corresponding</span>
-<span class="sd">        result Tweet object, which can be `None`.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `ids: list`  </span>
+<span class="sd">      List of tweet IDs to be fetched.</span>
+<span class="sd">    - `raise_on_none: boolean`  </span>
+<span class="sd">      Raise an `NoneResponseException` exception if</span>
+<span class="sd">      a Tweet could not be fetched for a given ID.</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `dict`  </span>
+<span class="sd">      Tweet IDs as keys paired with the corresponding</span>
+<span class="sd">      result Tweet object, which can be `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
@@ -2376,6 +2500,66 @@ matching the given ID.</p>
             <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
         <span class="n">tweets</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">obj</span> <span class="k">else</span> <span class="bp">None</span>
     <span class="k">return</span> <span class="n">tweets</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.statuses_retweet">
+    <p>def <span class="ident">statuses_retweet</span>(</p><p>self, id, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Retweet a Tweet by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the Tweet to retweet.</p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  Resulting Tweet object containing retweet 
+  data information.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_retweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.statuses_retweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retweet a Tweet by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the Tweet to retweet.</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      Resulting Tweet object containing retweet </span>
+<span class="sd">      data information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2441,6 +2625,63 @@ result will be <code>None</code>.</p>
         <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
     
     <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.statuses_unretweet">
+    <p>def <span class="ident">statuses_unretweet</span>(</p><p>self, id, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Revoke a retweet by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the Tweet to unretweet.</p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  Tweet object of the revoked retweet.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_unretweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.statuses_unretweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Revoke a retweet by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the Tweet to unretweet.</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      Tweet object of the revoked retweet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </pre></div>
 
   </div>

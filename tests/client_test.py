@@ -1,9 +1,18 @@
-import unittest
 import os
+import sys
+import time
+import unittest
+from random import randint
 
 from pytter import (
     Client, Credentials
 )
+
+
+def wait_rand():
+    r = randint(0, 30)
+    print('=== WAITING {} SECONDS BEFORE EXECUTING TEST ==='.format(r))
+    time.sleep(r)
 
 class ClientTest(unittest.TestCase):
     
@@ -13,6 +22,8 @@ class ClientTest(unittest.TestCase):
     TEST_CTX = '{} #{}'.format(TEST_TXT, TEST_HT)
 
     def setUp(self):
+        self.travis_mode = not not os.environ.get('travis_ci_mode')
+
         self.sent_tweets = []
         self.credentials = Credentials(
             consumer_key=os.environ.get('tw_consumer_key'),
@@ -30,10 +41,14 @@ class ClientTest(unittest.TestCase):
                 pass
 
     def test_init(self):
+        wait_rand()
+        
         client = Client(self.credentials)
         self.assertIsNotNone(client)
 
     def test_status_update_and_delete(self):
+        wait_rand()
+
         client = Client(self.credentials)
         res = client.status_update(self.TEST_CTX, media=self.TEST_IMG)
         self.assertIsNotNone(res)
@@ -46,6 +61,8 @@ class ClientTest(unittest.TestCase):
         self.assertIsNotNone(res)
 
     def test_status(self):
+        wait_rand()
+
         client = Client(self.credentials)
         res = client.status_update(self.TEST_CTX)
         self.assertIsNotNone(res)
@@ -54,6 +71,8 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(res.text, rec.text)
 
     def test_statuses(self):
+        wait_rand()
+        
         client = Client(self.credentials)
         res_t1 = client.status_update('my tweet 1')
         self.sent_tweets.append(res_t1)
@@ -66,6 +85,17 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(rec[res_t1.id_str].text, res_t1.text)
         self.assertEqual(rec[res_t2.id_str].text, res_t2.text)
         self.assertIsNone(rec['1231231'])
+
+    def test_retweets(self):
+        wait_rand()
+        
+        client = Client(self.credentials)
+        o_t = client.status_update('this will be retweeted by me!')
+        self.sent_tweets.append(o_t)
+        rt = o_t.retweet()
+        self.assertIsNotNone(rt)
+        rt.un_retweet()
+        self.assertIsNotNone(rt)
 
 
 if __name__ == '__main__':

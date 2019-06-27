@@ -11,11 +11,10 @@ class Client:
     Simple and easy to use API client which wraps
     around APISession.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    credentials : Credentials
-        Twitter APP or user credentials object.
+    - `credentials : Credentials`  
+      Twitter APP or user credentials object.
     """
 
     def __init__(self, credentials: Credentials):
@@ -32,47 +31,51 @@ class Client:
         """
         Send a tweet.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        text: str
-            The text content of the tweet.
+        - `text: str`  
+          The text content of the tweet.
 
-        media: list
-            A list of media links which will be attached
-            to the tweet. These can be a path to a local
-            file, an URI to an online file which will be 
-            downloaded or a already created FileInfo 
-            object.
-            Default: []
+        - `media: list`  
+          A list of media links which will be attached
+          to the tweet. These can be a path to a local
+          file, an URI to an online file which will be 
+          downloaded or a already created FileInfo 
+          object.
+          *Default: `[]`*
         
-        possibly_sensitive: bool
-            Wether the tweet contains any sensitive content
-            such as nudity or medical procedures.
-            Default: False
+        - `possibly_sensitive: bool`  
+          Wether the tweet contains any sensitive content
+          such as nudity or medical procedures.
+          *Default: `False`*
 
-        lat: float
-            The latitude of the location where the tweet
-            referes to. This must be a number between -90
-            and 90 and will be ignored if `long` parameter
-            is not passed.
-            Default: None
+        - `lat: float`  
+          The latitude of the location where the tweet
+          referes to. This must be a number between -90
+          and 90 and will be ignored if `long` parameter
+          is not passed.
+          *Default: `None`*
 
-        long: float
-            The longitude of the location where the tweet
-            referes to. THis must be a value between -180
-            and 180 and will be ignored if `lat` parameter
-            is not passed.
-            Default: None
+        - `long: float`  
+          The longitude of the location where the tweet
+          referes to. THis must be a value between -180
+          and 180 and will be ignored if `lat` parameter
+          is not passed.
+          *Default: `None`*
 
-        place: [Place, str]
-            A place the tweet referes to. This can be a place
-            object or a place ID as string.
-            Default: None
+        - `place: [Place, str]`  
+          A place the tweet referes to. This can be a place
+          object or a place ID as string.
+          *Default: `None`*
 
-        display_coordinates: bool
-            Wether or not to display coordinates in tweet.
-            Default: False
+        - `display_coordinates: bool`  
+          Wether or not to display coordinates in tweet.
+          *Default: `False`*
+
+        **Returns**
+
+        - `Tweet`  
+          The resulting Tweet object.
         """
 
         return self._session.statuses_update(
@@ -88,17 +91,15 @@ class Client:
         """
         Delete a tweet by its ID.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        tweet_id: [str, int]
-            The ID of the tweet as string or integer.
+        - `tweet_id: [str, int]`  
+          The ID of the tweet as string or integer.
 
-        Returns
-        =======
+        **Returns**
 
-        Tweet
-            The tweet object of the deleted tweet.
+        - `Tweet`  
+          The tweet object of the deleted tweet.
         """
         
         return self._session.statuses_destroy(tweet_id)
@@ -110,25 +111,23 @@ class Client:
         Get Tweet by its ID. If there was no Tweet
         found by this ID, the result will be None.
 
-        Parameters
-        ==========
+        **Parameters**
 
-        tweet_id: [str, int]
-            ID of the Tweet to be fetched.
+        - `tweet_id: [str, int]`  
+          ID of the Tweet to be fetched.
 
-        include_entities: bool
-            Include Tweet entity objects.
-            Default: True
+        - `include_entities: bool`  
+          Enclude Tweet entities.
+          *Default: `True`*
 
         include_ext_alt_text: bool
-            Include Tweets alt text, if set.
-            Default: True
+          Include Tweets alt text, if set.
+          *Default: `True`*
 
-        Returns
-        =======
+        **Returns**
 
-        Tweet
-            Resulting Tweet or `None`.
+        - `Tweet`  
+          Resulting Tweet or `None`.
         """
 
         return self._session.statuses_show(id=tweet_id,
@@ -145,31 +144,29 @@ class Client:
         requested Tweet ID paired with the fetched Tweet
         object, if found. Else, the value will be `None`.
 
-        Parameters
-        ==========
+        **Parameters**
         
-        tweet_ids: list
-            List of Tweet IDs to be fetched.
+        - `tweet_ids: list`  
+          List of Tweet IDs to be fetched.
         
-        include_entities: bool
-            Include Tweets entity objects.
-            Default: True
+        - `include_entities: bool`  
+          Include Tweets entity objects.
+          Default: True
         
-        include_ext_alt_text: bool
-            Include Tweets alt texts, if set.
-            Default: True
+        - `include_ext_alt_text: bool`  
+          Include Tweets alt texts, if set.
+          Default: True
         
-        raise_on_none: bool
-            If this is set to `True`, an `NoneResponseException`
-            will be risen if one of the Tweets is `None` (not found,
-            not existent or not accessable).
+        - `raise_on_none: bool`  
+          If this is set to `True`, an `NoneResponseException`
+          will be risen if one of the Tweets is `None` (not found,
+          not existent or not accessable).
 
-        Returns
-        =======
+        **Returns**
 
-        dict
-            Tweet IDs as keys paired with the corresponding
-            result Tweet object, which can be `None`.
+        - `dict`  
+          Tweet IDs as keys paired with the corresponding
+          result Tweet object, which can be `None`.
         """
 
         return self._session.statuses_lookup(

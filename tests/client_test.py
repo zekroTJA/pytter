@@ -86,7 +86,7 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(rec[res_t2.id_str].text, res_t2.text)
         self.assertIsNone(rec['1231231'])
 
-    def test_retweets(self):
+    def test_retweet_unretweet(self):
         if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
@@ -96,6 +96,18 @@ class ClientTest(unittest.TestCase):
         self.assertIsNotNone(rt)
         rt.un_retweet()
         self.assertIsNotNone(rt)
+
+    def test_retweets(self):
+        if self.travis_mode: wait_rand()
+        
+        client = Client(self.credentials)
+        o_t = client.status_update('and this will also be retweeted by me!')
+        self.sent_tweets.append(o_t)
+        o_t.retweet()
+        rts = o_t.retweets()
+        self.assertIsNotNone(rts)
+        self.assertEqual(len(rts), 1)
+        # TODO: expand test
 
 
 if __name__ == '__main__':

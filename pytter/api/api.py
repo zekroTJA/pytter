@@ -87,7 +87,8 @@ class APISession:
             raise RateLimitException()
 
         if not res.ok:
-            raise Exception('request failed with status code {0} and message:'.format(res.status_code))
+            raise Exception('request failed with status code {0} and message: {}'
+                .format(res.status_code, res.text))
 
         return res.json()
 

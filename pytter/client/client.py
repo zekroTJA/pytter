@@ -152,10 +152,10 @@ class Client:
           ID of the Tweet to be fetched.
 
         - `include_entities: bool`  
-          Enclude Tweet entities.
+          Include Tweet entities.
           *Default: `True`*
 
-        include_ext_alt_text: bool
+        - `include_ext_alt_text: bool`  
           Include Tweets alt text, if set.
           *Default: `True`*
 

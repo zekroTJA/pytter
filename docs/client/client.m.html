@@ -1234,10 +1234,10 @@ table {
 <span class="sd">          ID of the Tweet to be fetched.</span>
 
 <span class="sd">        - `include_entities: bool`  </span>
-<span class="sd">          Enclude Tweet entities.</span>
+<span class="sd">          Include Tweet entities.</span>
 <span class="sd">          *Default: `True`*</span>
 
-<span class="sd">        include_ext_alt_text: bool</span>
+<span class="sd">        - `include_ext_alt_text: bool`  </span>
 <span class="sd">          Include Tweets alt text, if set.</span>
 <span class="sd">          *Default: `True`*</span>
 
@@ -1480,10 +1480,10 @@ around APISession.</p>
 <span class="sd">          ID of the Tweet to be fetched.</span>
 
 <span class="sd">        - `include_entities: bool`  </span>
-<span class="sd">          Enclude Tweet entities.</span>
+<span class="sd">          Include Tweet entities.</span>
 <span class="sd">          *Default: `True`*</span>
 
-<span class="sd">        include_ext_alt_text: bool</span>
+<span class="sd">        - `include_ext_alt_text: bool`  </span>
 <span class="sd">          Include Tweets alt text, if set.</span>
 <span class="sd">          *Default: `True`*</span>
 
@@ -1609,13 +1609,15 @@ found by this ID, the result will be None.</p>
 </li>
 <li>
 <p><code>include_entities: bool</code><br />
-  Enclude Tweet entities.
+  Include Tweet entities.
+  <em>Default: <code>True</code></em></p>
+</li>
+<li>
+<p><code>include_ext_alt_text: bool</code><br />
+  Include Tweets alt text, if set.
   <em>Default: <code>True</code></em></p>
 </li>
 </ul>
-<p>include_ext_alt_text: bool
-  Include Tweets alt text, if set.
-  <em>Default: <code>True</code></em></p>
 <p><strong>Returns</strong></p>
 <ul>
 <li><code>Tweet</code><br />
@@ -1634,9 +1636,9 @@ found by this ID, the result will be None.</p>
 <span class="sd">    - `tweet_id: [str, int]`  </span>
 <span class="sd">      ID of the Tweet to be fetched.</span>
 <span class="sd">    - `include_entities: bool`  </span>
-<span class="sd">      Enclude Tweet entities.</span>
+<span class="sd">      Include Tweet entities.</span>
 <span class="sd">      *Default: `True`*</span>
-<span class="sd">    include_ext_alt_text: bool</span>
+<span class="sd">    - `include_ext_alt_text: bool`  </span>
 <span class="sd">      Include Tweets alt text, if set.</span>
 <span class="sd">      *Default: `True`*</span>
 <span class="sd">    **Returns**</span>

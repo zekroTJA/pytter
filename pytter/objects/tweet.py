@@ -124,3 +124,27 @@ class Tweet:
             raise Exception('a non-retweet can not be revoked')
 
         return self._session.statuses_unretweet(self.id or self.id_str)
+
+    def retweets(self, count: int = None) -> list:
+        """
+        Retruns a list of up to 100 retweets of
+        this tweet.
+
+        **Parameters**
+
+        - `count: int`  
+          The ammount of retweets to be collected
+          (in range of [1, 100]).  
+          *Default`: `None`*
+
+        **Returns**  
+        
+        - `list`  
+          List of Tweet objects representing the
+          retweets details.
+        """
+
+        if not self._session:
+            raise NoSessionException()
+        
+        return self._session.statuses_retweets(self.id or self.id_str, count=count)

@@ -6,9 +6,22 @@ class Credentials:
     TwitterCedentials contains the consumer_key
     and the comsumer_secret for creating an
     access token.
-    If consumer_key or consumer_secret is None,
-    an exception will be raised.
+    
+    **Parameters**
+
+    - `consumer_key: str`  
+      The App consumer API key.
+
+    - `consumer_secret: str`  
+      The App consumer API secret key.
+
+    - `access_token_key: str`  
+      The App access token key.
+
+    - `access_token_secret: str`  
+      The App access token secret.
     """
+    
     consumer_key: str        = None
     consumer_secret: str     = None
     access_token_key: str    = None

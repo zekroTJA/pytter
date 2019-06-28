@@ -1,5 +1,6 @@
 from typing import NamedTuple
 from requests_oauthlib import OAuth1
+from typing import Dict, List
 
 from ..utils import utils
 from ..api import APISession, Credentials
@@ -17,8 +18,29 @@ class Client:
       Twitter APP or user credentials object.
     """
 
+    #################
+    # GENERAL FUNCS #
+    #################
+
     def __init__(self, credentials: Credentials):
         self._session = APISession(credentials)
+
+    def session(self) -> APISession:
+        """
+        Returns the clients APISession
+        instance.
+
+        **Returns**
+
+        - `APISession`  
+          Initialized APISession instance.
+        """
+        
+        return self._session
+
+    ############
+    # STATUSES #
+    ############
 
     def status_update(self, 
         text: str, 
@@ -172,7 +194,7 @@ class Client:
     def statuses(self, tweet_ids: list, 
         include_entities: bool = True,
         include_ext_alt_text: bool = True,
-        raise_on_none = False) -> dict:
+        raise_on_none = False) -> Dict[str, Tweet]:
         """
         Gets up to 100 tweets by their IDs.The result will be
         a dictionary with keys representing the originally
@@ -199,7 +221,7 @@ class Client:
 
         **Returns**
 
-        - `dict`  
+        - `Dict[[str, int], Tweet]`  
           Tweet IDs as keys paired with the corresponding
           result Tweet object, which can be `None`.
         """
@@ -209,6 +231,29 @@ class Client:
             raise_on_none=raise_on_none,
             include_entities=include_entities,
             include_ext_alt_text=include_ext_alt_text)
+
+    def status_retweets(self, tweet_id: [str, int], count: int = None) -> List[Tweet]:
+        """
+        Returns a list of up to 100 retweet objects
+        of the passed tweet.
+
+        - `id: [str, int]`  
+          The ID of the Tweet to get the list of
+          retweets from.
+
+        - `count: int`  
+          The ammount of retweets to be collected
+          (in range of [1, 100]).  
+          *Default`: `None`*
+
+        **Returns**  
+        
+        - `List[Tweet]`  
+          List of Tweet objects representing the
+          retweets details.
+        """
+
+        return self._session.statuses_retweets(id=tweet_id, count=count)
 
     ###########
     # ALIASES #
@@ -221,7 +266,7 @@ class Client:
 
         return self.status(**kwargs)
 
-    def tweets(self, **kwargs) -> dict:
+    def tweets(self, **kwargs) -> Dict[str, Tweet]:
         """
         Alias for Client#statuses.
         """

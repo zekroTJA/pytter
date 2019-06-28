@@ -1,12 +1,23 @@
 
 class UserStats:
+    """
+    Representing user statistics like follower count,
+    following count, tweet cound and listed count.
+    """
+
     def __init__(self, data: dict = {}):
         self.followers_count    = data.get('followers_count')
         self.following_count    = data.get('following_count')
         self.tweet_count        = data.get('tweet_count')
         self.listed_count       = data.get('listed_count')
 
+
 class User:
+    """
+    User object.
+    Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
+    """
+
     def __init__(self, data: dict = {}):
         self.id_str             = data.get('id') or data.get('id_str')
         self.created_at         = data.get('created_at')

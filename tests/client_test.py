@@ -35,6 +35,7 @@ class ClientTest(unittest.TestCase):
     def tearDown(self):
         client = Client(self.credentials)
         for t in self.sent_tweets:
+            time.sleep(1)
             try: 
                 client.status_delete(t.id)
             except:

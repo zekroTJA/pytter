@@ -1082,12 +1082,20 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user', this);">Show source &equiv;</a></p>
   <div id="source-pytter.objects.user" class="source">
     <div class="codehilite"><pre><span></span><span class="n">lass</span> <span class="n">UserStats</span><span class="p">:</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Representing user statistics like follower count,</span>
+<span class="sd">   following count, tweet cound and listed count.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">followers_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">tweet_count</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tweet_count&#39;</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">listed_count</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span>
 <span class="n">lass</span> <span class="n">User</span><span class="p">:</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   User object.</span>
+<span class="sd">   Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object</span>
+<span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>             <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>         <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">)</span>
@@ -1115,10 +1123,17 @@ table {
       <p id="pytter.objects.user.User" class="name">class <span class="ident">User</span></p>
       
   
+    <div class="desc"><p>User object.
+Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.User', this);">Show source &equiv;</a></p>
   <div id="source-pytter.objects.user.User" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    User object.</span>
+<span class="sd">    Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>             <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>         <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">)</span>
@@ -1294,10 +1309,17 @@ table {
       <p id="pytter.objects.user.UserStats" class="name">class <span class="ident">UserStats</span></p>
       
   
+    <div class="desc"><p>Representing user statistics like follower count,
+following count, tweet cound and listed count.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.UserStats', this);">Show source &equiv;</a></p>
   <div id="source-pytter.objects.user.UserStats" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">UserStats</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representing user statistics like follower count,</span>
+<span class="sd">    following count, tweet cound and listed count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">followers_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>

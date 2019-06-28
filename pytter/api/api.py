@@ -2,7 +2,8 @@ import uuid
 import base64
 import urllib
 import requests
-from requests_oauthlib import OAuth1, OAuth2
+from typing import Iterator, List, Dict
+from requests_oauthlib import OAuth2
 
 from .credentials import Credentials
 from .exceptions import (
@@ -17,15 +18,15 @@ from ..utils import FileInfo
 
 class APISession:
     """
-    Twitter API wrapper session initialized by passed
-    credentials and options.
+    Barebone Twitter API wrapper representing Twitters API
+    endpoints directly. Initialized with App Credentials
+    for authentication and authorization.
 
-    Parameters
-    ==========
+    **Parameters**
 
-    credentials: Credentials
-        APP or User credentials to authenticate against
-        the Twitter API.
+    - `credentials: Credentials`  
+      APP or User credentials to authenticate against
+      the Twitter API.
     """
 
     API_ROOT_URI        = 'https://api.twitter.com'
@@ -52,7 +53,7 @@ class APISession:
     # GENERAL REQUEST HANDLING #
     ############################
 
-    def request(self, method: str, resource_path: str, **kwargs):
+    def request(self, method: str, resource_path: str, **kwargs) -> object:
         """
         Request the Twitter API with the defined authentication
         credentials.
@@ -126,7 +127,7 @@ class APISession:
     # UPLOAD API #
     ##############
 
-    def upload_media_request(self, command=None, params={}, raw=None, **kwargs):
+    def upload_media_request(self, command=None, params={}, raw=None, **kwargs) -> object:
         """
         Wrap a request to initiate, append or finalize a chunked media upload.
 
@@ -147,6 +148,11 @@ class APISession:
         - `**kwargs:`  
           Additional arguments which will be passed to
           the request method.
+
+        **Returns**
+
+        - `object`  
+          Resulting FINALIZE response object.
         """
 
         if raw is None:
@@ -162,7 +168,6 @@ class APISession:
         if res.status_code == 429:
             raise RateLimitException()
         if res.status_code < 200 or res.status_code >= 300:
-            print(res.json())
             raise Exception('request failed with status code {0}'.format(res.status_code))
 
         return res
@@ -257,7 +262,7 @@ class APISession:
 
         return Media(res.json())
 
-    def upload_attachments(self, media: list, close_after: bool = False) -> iter:
+    def upload_attachments(self, media: list, close_after: bool = False) -> Iterator[Media]:
         """
         Upload a list of media using chunked upload.
         The list of media can only contain either 4 photos,
@@ -278,7 +283,7 @@ class APISession:
 
         **Returns**
 
-        - `iter`  
+        - `Iterator[Media]`  
           Iterator of uploaded Media objects.
         """
 
@@ -331,12 +336,8 @@ class APISession:
           The result Tweet object.
         """
 
-        data = {
-            'status': status,
-        }
-
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
+        data['status'] = status
 
         if media is not None:
             if type(media) is not list:
@@ -374,9 +375,7 @@ class APISession:
           The tweet ofbject which was deleted.
         """
         
-        data = {}
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
 
         res = self.request('POST', 'statuses/destroy/{}.json'.format(id), data=data)
         if not res:
@@ -406,9 +405,7 @@ class APISession:
           Result Tweet obect or `None`.
         """
 
-        data = {}
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
 
         data['id'] = id
 
@@ -418,7 +415,7 @@ class APISession:
         
         return Tweet(res, self)
 
-    def statuses_lookup(self, ids: list, raise_on_none: bool = False, **kwargs) -> dict:
+    def statuses_lookup(self, ids: list, raise_on_none: bool = False, **kwargs) -> Dict[str, Tweet]:
         """
         Get details about up to 100 tweets. The returned
         dictionary keys represent the original requested
@@ -442,7 +439,7 @@ class APISession:
 
         **Returns**
 
-        - `dict`  
+        - `Dict[[int, str], Tweet]`  
           Tweet IDs as keys paired with the corresponding
           result Tweet object, which can be `None`.
         """
@@ -451,9 +448,7 @@ class APISession:
         if ln < 1 or ln > 100:
             raise ParameterOutOfBoundsException('index must be in range [1, 100]')
 
-        data = {}
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
 
         data['id'] = ','.join([str(id) for id in ids])
         data['map'] = True
@@ -492,9 +487,7 @@ class APISession:
           data information.
         """
 
-        data = {}
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
         
         res = self.request('POST', 'statuses/retweet/{}.json'.format(id), params=data)
         if not res:
@@ -521,12 +514,115 @@ class APISession:
           Tweet object of the revoked retweet.
         """
 
-        data = {}
-        for k, v in kwargs.items():
-            data[k] = v
+        data = kwargs
 
         res = self.request('POST', 'statuses/unretweet/{}.json'.format(id), params=data)
         if not res:
             return NoneResponseException()
 
         return Tweet(res)
+
+    def statuses_retweets(self, id: [str, int], count: int = None, **kwargs) -> List[Tweet]:
+        """
+        Returns a list of up to 100 of the most recent 
+        retweets of the specified Tweet by ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          The ID of the Tweet to get the list of
+          retweets from.
+
+        - `count: int`  
+          The ammount of retweets to be collected
+          (in range of [1, 100]).  
+          *Default`: `None`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**  
+        
+        - `List[Tweet]`  
+          List of Tweet objects representing the
+          retweets details.
+        """
+
+        data = kwargs
+
+        if count:
+            if count < 1 or count > 100:
+                raise ParameterOutOfBoundsException('count must be in range of [1, 100]')
+            data['count'] = count
+
+        res = self.request('GET', 'statuses/retweets/{}.json'.format(id), params=data)
+        if not res:
+            raise NoneResponseException()
+
+        return [Tweet(r, self) for r in res]
+
+    def statuses_retweets_of_me(self, 
+        count: int = None,
+        since_id: [int, str] = None,
+        max_id: [int, str] = None,
+        include_entities: bool = True,
+        include_user_entities: bool = True,
+        **kwargs) -> List[Tweet]:
+        """
+        Returns the most recent retweets of tweets authored
+        by the authenticated user. This is a subset of the
+        user timeline.
+
+        **Parameters**
+
+        - `count: int`  
+          Number of records to be retrieved in range of
+          [1, 100]. If omitted, 20 will be assumed.  
+          *Default: `None`*
+
+        - `since_id: [int, str]`  
+          Results only after the given tweet ID (which
+          means more recent then the given tweet)  
+          *Default: `None`*
+
+        - `max_id: [int, str]`  
+          Retuned results will be less than or equal 
+          the given tweet ID.  
+          *Default: `None`*
+
+        - `include_entities: bool`  
+          Include tweet entities in result objects.  
+          *Default: `True`*
+             
+        - `include_user_entities: bool`  
+          Include user objects in result objects.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `List[Tweet]`  
+          Result list of Tweet objects.
+        """
+
+        data = kwargs
+
+        data['include_entities'] = include_entities
+        data['include_user_entities'] = include_user_entities
+
+        if count:
+            if count < 1 or count > 100:
+                raise ParameterOutOfBoundsException('count must be in range of [1, 100]')
+            data['count'] = count
+
+        if since_id:
+            data['since_id'] = since_id
+
+        if max_id:
+            data['max_id'] = max_id
+
+        res = self.request('GET', 'statuses/retweets_of_mine', params=data)
+        if not res:
+            raise NoneResponseException()
+
+        return [Tweet(r, self) for r in res]

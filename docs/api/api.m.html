@@ -1055,6 +1055,8 @@ table {
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_destroy">statuses_destroy</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_lookup">statuses_lookup</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_retweet">statuses_retweet</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.statuses_retweets">statuses_retweets</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.statuses_retweets_of_me">statuses_retweets_of_me</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_show">statuses_show</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_unretweet">statuses_unretweet</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_update">statuses_update</a></li>
@@ -1087,7 +1089,8 @@ table {
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">urllib</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth1</span><span class="p">,</span> <span class="n">OAuth2</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth2</span>
 
 <span class="kn">from</span> <span class="nn">.credentials</span> <span class="kn">import</span> <span class="n">Credentials</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
@@ -1102,15 +1105,15 @@ table {
 
 <span class="k">class</span> <span class="nc">APISession</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Twitter API wrapper session initialized by passed</span>
-<span class="sd">    credentials and options.</span>
+<span class="sd">    Barebone Twitter API wrapper representing Twitters API</span>
+<span class="sd">    endpoints directly. Initialized with App Credentials</span>
+<span class="sd">    for authentication and authorization.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ==========</span>
+<span class="sd">    **Parameters**</span>
 
-<span class="sd">    credentials: Credentials</span>
-<span class="sd">        APP or User credentials to authenticate against</span>
-<span class="sd">        the Twitter API.</span>
+<span class="sd">    - `credentials: Credentials`  </span>
+<span class="sd">      APP or User credentials to authenticate against</span>
+<span class="sd">      the Twitter API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">API_ROOT_URI</span>        <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com&#39;</span>
@@ -1137,7 +1140,7 @@ table {
     <span class="c1"># GENERAL REQUEST HANDLING #</span>
     <span class="c1">############################</span>
 
-    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Request the Twitter API with the defined authentication</span>
 <span class="sd">        credentials.</span>
@@ -1211,7 +1214,7 @@ table {
     <span class="c1"># UPLOAD API #</span>
     <span class="c1">##############</span>
 
-    <span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wrap a request to initiate, append or finalize a chunked media upload.</span>
 
@@ -1232,6 +1235,11 @@ table {
 <span class="sd">        - `**kwargs:`  </span>
 <span class="sd">          Additional arguments which will be passed to</span>
 <span class="sd">          the request method.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `object`  </span>
+<span class="sd">          Resulting FINALIZE response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">raw</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1247,7 +1255,6 @@ table {
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RateLimitException</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;request failed with status code {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">res</span>
@@ -1342,7 +1349,7 @@ table {
 
         <span class="k">return</span> <span class="n">Media</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">iter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Media</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload a list of media using chunked upload.</span>
 <span class="sd">        The list of media can only contain either 4 photos,</span>
@@ -1363,7 +1370,7 @@ table {
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `iter`  </span>
+<span class="sd">        - `Iterator[Media]`  </span>
 <span class="sd">          Iterator of uploaded Media objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1416,12 +1423,8 @@ table {
 <span class="sd">          The result Tweet object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
 
         <span class="k">if</span> <span class="n">media</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">media</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
@@ -1459,9 +1462,7 @@ table {
 <span class="sd">          The tweet ofbject which was deleted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/destroy/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
@@ -1491,9 +1492,7 @@ table {
 <span class="sd">          Result Tweet obect or `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
 
@@ -1503,7 +1502,7 @@ table {
         
         <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get details about up to 100 tweets. The returned</span>
 <span class="sd">        dictionary keys represent the original requested</span>
@@ -1527,7 +1526,7 @@ table {
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `dict`  </span>
+<span class="sd">        - `Dict[[int, str], Tweet]`  </span>
 <span class="sd">          Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1536,9 +1535,7 @@ table {
         <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;index must be in range [1, 100]&#39;</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
@@ -1577,9 +1574,7 @@ table {
 <span class="sd">          data information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
         
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
@@ -1606,15 +1601,118 @@ table {
 <span class="sd">          Tweet object of the revoked retweet.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of up to 100 of the most recent </span>
+<span class="sd">        retweets of the specified Tweet by ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the Tweet to get the list of</span>
+<span class="sd">          retweets from.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweets_of_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">since_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">max_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the most recent retweets of tweets authored</span>
+<span class="sd">        by the authenticated user. This is a subset of the</span>
+<span class="sd">        user timeline.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          Number of records to be retrieved in range of</span>
+<span class="sd">          [1, 100]. If omitted, 20 will be assumed.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `since_id: [int, str]`  </span>
+<span class="sd">          Results only after the given tweet ID (which</span>
+<span class="sd">          means more recent then the given tweet)  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `max_id: [int, str]`  </span>
+<span class="sd">          Retuned results will be less than or equal </span>
+<span class="sd">          the given tweet ID.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Include tweet entities in result objects.  </span>
+<span class="sd">          *Default: `True`*</span>
+<span class="sd">             </span>
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Include user objects in result objects.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          Result list of Tweet objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_entities</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_user_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_user_entities</span>
+
+        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="k">if</span> <span class="n">since_id</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;since_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">since_id</span>
+
+        <span class="k">if</span> <span class="n">max_id</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_id</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets_of_mine&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1630,26 +1728,29 @@ table {
       <p id="pytter.api.api.APISession" class="name">class <span class="ident">APISession</span></p>
       
   
-    <div class="desc"><p>Twitter API wrapper session initialized by passed
-credentials and options.</p>
-<h1>Parameters</h1>
-<p>credentials: Credentials
-    APP or User credentials to authenticate against
-    the Twitter API.</p></div>
+    <div class="desc"><p>Barebone Twitter API wrapper representing Twitters API
+endpoints directly. Initialized with App Credentials
+for authentication and authorization.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>credentials: Credentials</code><br />
+  APP or User credentials to authenticate against
+  the Twitter API.</li>
+</ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">APISession</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Twitter API wrapper session initialized by passed</span>
-<span class="sd">    credentials and options.</span>
+<span class="sd">    Barebone Twitter API wrapper representing Twitters API</span>
+<span class="sd">    endpoints directly. Initialized with App Credentials</span>
+<span class="sd">    for authentication and authorization.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ==========</span>
+<span class="sd">    **Parameters**</span>
 
-<span class="sd">    credentials: Credentials</span>
-<span class="sd">        APP or User credentials to authenticate against</span>
-<span class="sd">        the Twitter API.</span>
+<span class="sd">    - `credentials: Credentials`  </span>
+<span class="sd">      APP or User credentials to authenticate against</span>
+<span class="sd">      the Twitter API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">API_ROOT_URI</span>        <span class="o">=</span> <span class="s1">&#39;https://api.twitter.com&#39;</span>
@@ -1676,7 +1777,7 @@ credentials and options.</p>
     <span class="c1"># GENERAL REQUEST HANDLING #</span>
     <span class="c1">############################</span>
 
-    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Request the Twitter API with the defined authentication</span>
 <span class="sd">        credentials.</span>
@@ -1750,7 +1851,7 @@ credentials and options.</p>
     <span class="c1"># UPLOAD API #</span>
     <span class="c1">##############</span>
 
-    <span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wrap a request to initiate, append or finalize a chunked media upload.</span>
 
@@ -1771,6 +1872,11 @@ credentials and options.</p>
 <span class="sd">        - `**kwargs:`  </span>
 <span class="sd">          Additional arguments which will be passed to</span>
 <span class="sd">          the request method.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `object`  </span>
+<span class="sd">          Resulting FINALIZE response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">raw</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -1786,7 +1892,6 @@ credentials and options.</p>
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">RateLimitException</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;request failed with status code {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">res</span>
@@ -1881,7 +1986,7 @@ credentials and options.</p>
 
         <span class="k">return</span> <span class="n">Media</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">iter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Media</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upload a list of media using chunked upload.</span>
 <span class="sd">        The list of media can only contain either 4 photos,</span>
@@ -1902,7 +2007,7 @@ credentials and options.</p>
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `iter`  </span>
+<span class="sd">        - `Iterator[Media]`  </span>
 <span class="sd">          Iterator of uploaded Media objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1955,12 +2060,8 @@ credentials and options.</p>
 <span class="sd">          The result Tweet object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
 
         <span class="k">if</span> <span class="n">media</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">media</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
@@ -1998,9 +2099,7 @@ credentials and options.</p>
 <span class="sd">          The tweet ofbject which was deleted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/destroy/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
@@ -2030,9 +2129,7 @@ credentials and options.</p>
 <span class="sd">          Result Tweet obect or `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
 
@@ -2042,7 +2139,7 @@ credentials and options.</p>
         
         <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get details about up to 100 tweets. The returned</span>
 <span class="sd">        dictionary keys represent the original requested</span>
@@ -2066,7 +2163,7 @@ credentials and options.</p>
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `dict`  </span>
+<span class="sd">        - `Dict[[int, str], Tweet]`  </span>
 <span class="sd">          Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2075,9 +2172,7 @@ credentials and options.</p>
         <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;index must be in range [1, 100]&#39;</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
@@ -2116,9 +2211,7 @@ credentials and options.</p>
 <span class="sd">          data information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
         
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
@@ -2145,15 +2238,118 @@ credentials and options.</p>
 <span class="sd">          Tweet object of the revoked retweet.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of up to 100 of the most recent </span>
+<span class="sd">        retweets of the specified Tweet by ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the Tweet to get the list of</span>
+<span class="sd">          retweets from.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">statuses_retweets_of_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">since_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">max_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the most recent retweets of tweets authored</span>
+<span class="sd">        by the authenticated user. This is a subset of the</span>
+<span class="sd">        user timeline.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          Number of records to be retrieved in range of</span>
+<span class="sd">          [1, 100]. If omitted, 20 will be assumed.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `since_id: [int, str]`  </span>
+<span class="sd">          Results only after the given tweet ID (which</span>
+<span class="sd">          means more recent then the given tweet)  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `max_id: [int, str]`  </span>
+<span class="sd">          Retuned results will be less than or equal </span>
+<span class="sd">          the given tweet ID.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Include tweet entities in result objects.  </span>
+<span class="sd">          *Default: `True`*</span>
+<span class="sd">             </span>
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Include user objects in result objects.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          Result list of Tweet objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_entities</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_user_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_user_entities</span>
+
+        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="k">if</span> <span class="n">since_id</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;since_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">since_id</span>
+
+        <span class="k">if</span> <span class="n">max_id</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_id</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets_of_mine&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -2325,7 +2521,7 @@ This method raises an exception on failed authentication or request.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.request', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession.request" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Request the Twitter API with the defined authentication</span>
 <span class="sd">    credentials.</span>
@@ -2405,9 +2601,7 @@ This method raises an exception on failed authentication or request.</p>
 <span class="sd">      The tweet ofbject which was deleted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/destroy/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
@@ -2453,14 +2647,14 @@ matching the given ID.</p>
 </ul>
 <p><strong>Returns</strong></p>
 <ul>
-<li><code>dict</code><br />
+<li><code>Dict[[int, str], Tweet]</code><br />
   Tweet IDs as keys paired with the corresponding
   result Tweet object, which can be <code>None</code>.</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_lookup', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession.statuses_lookup" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">raise_on_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get details about up to 100 tweets. The returned</span>
 <span class="sd">    dictionary keys represent the original requested</span>
@@ -2478,16 +2672,14 @@ matching the given ID.</p>
 <span class="sd">      Additional agruments passed directly to the </span>
 <span class="sd">      request parameters.</span>
 <span class="sd">    **Returns**</span>
-<span class="sd">    - `dict`  </span>
+<span class="sd">    - `Dict[[int, str], Tweet]`  </span>
 <span class="sd">      Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">      result Tweet object, which can be `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;index must be in range [1, 100]&#39;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;map&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/lookup.json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -2552,14 +2744,196 @@ matching the given ID.</p>
 <span class="sd">      Resulting Tweet object containing retweet </span>
 <span class="sd">      data information.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.statuses_retweets">
+    <p>def <span class="ident">statuses_retweets</span>(</p><p>self, id, count=None, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of up to 100 of the most recent 
+retweets of the specified Tweet by ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the Tweet to get the list of
+  retweets from.</p>
+</li>
+<li>
+<p><code>count: int</code><br />
+  The ammount of retweets to be collected
+  (in range of [1, 100]).<br />
+<em>Default<code>:</code>None`</em></p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong>  </p>
+<ul>
+<li><code>List[Tweet]</code><br />
+  List of Tweet objects representing the
+  retweets details.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_retweets', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.statuses_retweets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of up to 100 of the most recent </span>
+<span class="sd">    retweets of the specified Tweet by ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the Tweet to get the list of</span>
+<span class="sd">      retweets from.</span>
+<span class="sd">    - `count: int`  </span>
+<span class="sd">      The ammount of retweets to be collected</span>
+<span class="sd">      (in range of [1, 100]).  </span>
+<span class="sd">      *Default`: `None`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**  </span>
+<span class="sd">    </span>
+<span class="sd">    - `List[Tweet]`  </span>
+<span class="sd">      List of Tweet objects representing the</span>
+<span class="sd">      retweets details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.statuses_retweets_of_me">
+    <p>def <span class="ident">statuses_retweets_of_me</span>(</p><p>self, count=None, since_id=None, max_id=None, include_entities=True, include_user_entities=True, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns the most recent retweets of tweets authored
+by the authenticated user. This is a subset of the
+user timeline.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>count: int</code><br />
+  Number of records to be retrieved in range of
+  [1, 100]. If omitted, 20 will be assumed.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>since_id: [int, str]</code><br />
+  Results only after the given tweet ID (which
+  means more recent then the given tweet)<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>max_id: [int, str]</code><br />
+  Retuned results will be less than or equal 
+  the given tweet ID.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>include_entities: bool</code><br />
+  Include tweet entities in result objects.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+<li>
+<p><code>include_user_entities: bool</code><br />
+  Include user objects in result objects.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[Tweet]</code><br />
+  Result list of Tweet objects.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.statuses_retweets_of_me', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.statuses_retweets_of_me" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses_retweets_of_me</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">since_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">max_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the most recent retweets of tweets authored</span>
+<span class="sd">    by the authenticated user. This is a subset of the</span>
+<span class="sd">    user timeline.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `count: int`  </span>
+<span class="sd">      Number of records to be retrieved in range of</span>
+<span class="sd">      [1, 100]. If omitted, 20 will be assumed.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `since_id: [int, str]`  </span>
+<span class="sd">      Results only after the given tweet ID (which</span>
+<span class="sd">      means more recent then the given tweet)  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `max_id: [int, str]`  </span>
+<span class="sd">      Retuned results will be less than or equal </span>
+<span class="sd">      the given tweet ID.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `include_entities: bool`  </span>
+<span class="sd">      Include tweet entities in result objects.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">         </span>
+<span class="sd">    - `include_user_entities: bool`  </span>
+<span class="sd">      Include user objects in result objects.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[Tweet]`  </span>
+<span class="sd">      Result list of Tweet objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_entities</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;include_user_entities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">include_user_entities</span>
+    <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s1">&#39;count must be in range of [1, 100]&#39;</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+    <span class="k">if</span> <span class="n">since_id</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;since_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">since_id</span>
+    <span class="k">if</span> <span class="n">max_id</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;max_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_id</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/retweets_of_mine&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -2616,9 +2990,7 @@ result will be <code>None</code>.</p>
 <span class="sd">    - `Tweet`  </span>
 <span class="sd">      Result Tweet obect or `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/show.json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
@@ -2675,9 +3047,7 @@ result will be <code>None</code>.</p>
 <span class="sd">    - `Tweet`  </span>
 <span class="sd">      Tweet object of the revoked retweet.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;statuses/unretweet/{}.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">params</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">NoneResponseException</span><span class="p">()</span>
@@ -2750,11 +3120,8 @@ result will be <code>None</code>.</p>
 <span class="sd">    - `Tweet`  </span>
 <span class="sd">      The result Tweet object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
     <span class="k">if</span> <span class="n">media</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">media</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">media</span> <span class="o">=</span> <span class="p">[</span><span class="n">media</span><span class="p">]</span>
@@ -2804,13 +3171,13 @@ exception.</p>
 </ul>
 <p><strong>Returns</strong></p>
 <ul>
-<li><code>iter</code><br />
+<li><code>Iterator[Media]</code><br />
   Iterator of uploaded Media objects.</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.upload_attachments', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession.upload_attachments" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">iter</span><span class="p">:</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_attachments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">media</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">close_after</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Media</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Upload a list of media using chunked upload.</span>
 <span class="sd">    The list of media can only contain either 4 photos,</span>
@@ -2827,7 +3194,7 @@ exception.</p>
 <span class="sd">      uploading or not.</span>
 <span class="sd">      *Default: `False`*</span>
 <span class="sd">    **Returns**</span>
-<span class="sd">    - `iter`  </span>
+<span class="sd">    - `Iterator[Media]`  </span>
 <span class="sd">      Iterator of uploaded Media objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">max_attachable</span> <span class="o">=</span> <span class="bp">None</span>
@@ -3000,11 +3367,16 @@ the chunked twitter media upload endpoint.</p>
   Additional arguments which will be passed to
   the request method.</p>
 </li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>object</code><br />
+  Resulting FINALIZE response object.</li>
 </ul></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.upload_media_request', this);">Show source &equiv;</a></p>
   <div id="source-pytter.api.api.APISession.upload_media_request" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_media_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">raw</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrap a request to initiate, append or finalize a chunked media upload.</span>
 <span class="sd">    **Parameters**</span>
@@ -3020,6 +3392,9 @@ the chunked twitter media upload endpoint.</p>
 <span class="sd">    - `**kwargs:`  </span>
 <span class="sd">      Additional arguments which will be passed to</span>
 <span class="sd">      the request method.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `object`  </span>
+<span class="sd">      Resulting FINALIZE response object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">raw</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">params</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">command</span>
@@ -3032,7 +3407,6 @@ the chunked twitter media upload endpoint.</p>
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">RateLimitException</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;request failed with status code {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>

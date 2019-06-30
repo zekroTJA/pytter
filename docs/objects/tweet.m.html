@@ -1061,6 +1061,7 @@ table {
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.__init__">__init__</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.delete">delete</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.retweet">retweet</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.retweets">retweets</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.un_retweet">un_retweet</a></li>
   </ul>
 
@@ -1219,6 +1220,30 @@ table {
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;a non-retweet can not be revoked&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retruns a list of up to 100 retweets of</span>
+<span class="sd">        this tweet.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `list`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1414,6 +1439,30 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;a non-retweet can not be revoked&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_unretweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retruns a list of up to 100 retweets of</span>
+<span class="sd">        this tweet.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `list`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1547,6 +1596,59 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.tweet.Tweet.retweets">
+    <p>def <span class="ident">retweets</span>(</p><p>self, count=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Retruns a list of up to 100 retweets of
+this tweet.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li><code>count: int</code><br />
+  The ammount of retweets to be collected
+  (in range of [1, 100]).<br />
+<em>Default<code>:</code>None`</em></li>
+</ul>
+<p><strong>Returns</strong>  </p>
+<ul>
+<li><code>list</code><br />
+  List of Tweet objects representing the
+  retweets details.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.retweets', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.retweets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retruns a list of up to 100 retweets of</span>
+<span class="sd">    this tweet.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `count: int`  </span>
+<span class="sd">      The ammount of retweets to be collected</span>
+<span class="sd">      (in range of [1, 100]).  </span>
+<span class="sd">      *Default`: `None`*</span>
+<span class="sd">    **Returns**  </span>
+<span class="sd">    </span>
+<span class="sd">    - `list`  </span>
+<span class="sd">      List of Tweet objects representing the</span>
+<span class="sd">      retweets details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 </pre></div>
 
   </div>

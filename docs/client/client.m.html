@@ -1050,9 +1050,11 @@ table {
           
   <ul>
     <li class="mono"><a href="#pytter.client.client.Client.__init__">__init__</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.session">session</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status">status</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_delete">status_delete</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_retweet">status_retweet</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.status_retweets">status_retweets</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_unretweet">status_unretweet</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_update">status_update</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.statuses">statuses</a></li>
@@ -1082,6 +1084,7 @@ table {
   <div id="source-pytter.client.client" class="source">
     <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
 <span class="kn">from</span> <span class="nn">requests_oauthlib</span> <span class="kn">import</span> <span class="n">OAuth1</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">utils</span>
 <span class="kn">from</span> <span class="nn">..api</span> <span class="kn">import</span> <span class="n">APISession</span><span class="p">,</span> <span class="n">Credentials</span>
@@ -1099,8 +1102,29 @@ table {
 <span class="sd">      Twitter APP or user credentials object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1">#################</span>
+    <span class="c1"># GENERAL FUNCS #</span>
+    <span class="c1">#################</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">:</span> <span class="n">Credentials</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">APISession</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the clients APISession</span>
+<span class="sd">        instance.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `APISession`  </span>
+<span class="sd">          Initialized APISession instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+
+    <span class="c1">############</span>
+    <span class="c1"># STATUSES #</span>
+    <span class="c1">############</span>
 
     <span class="k">def</span> <span class="nf">status_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
@@ -1254,7 +1278,7 @@ table {
     <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
         <span class="n">include_ext_alt_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-        <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets up to 100 tweets by their IDs.The result will be</span>
 <span class="sd">        a dictionary with keys representing the originally</span>
@@ -1281,7 +1305,7 @@ table {
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `dict`  </span>
+<span class="sd">        - `Dict[[str, int], Tweet]`  </span>
 <span class="sd">          Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1291,6 +1315,29 @@ table {
             <span class="n">raise_on_none</span><span class="o">=</span><span class="n">raise_on_none</span><span class="p">,</span>
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">,</span>
             <span class="n">include_ext_alt_text</span><span class="o">=</span><span class="n">include_ext_alt_text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of up to 100 retweet objects</span>
+<span class="sd">        of the passed tweet.</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the Tweet to get the list of</span>
+<span class="sd">          retweets from.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 
     <span class="c1">###########</span>
     <span class="c1"># ALIASES #</span>
@@ -1303,7 +1350,7 @@ table {
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Alias for Client#statuses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1345,8 +1392,29 @@ around APISession.</p>
 <span class="sd">      Twitter APP or user credentials object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1">#################</span>
+    <span class="c1"># GENERAL FUNCS #</span>
+    <span class="c1">#################</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">:</span> <span class="n">Credentials</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">APISession</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the clients APISession</span>
+<span class="sd">        instance.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `APISession`  </span>
+<span class="sd">          Initialized APISession instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+
+    <span class="c1">############</span>
+    <span class="c1"># STATUSES #</span>
+    <span class="c1">############</span>
 
     <span class="k">def</span> <span class="nf">status_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
@@ -1500,7 +1568,7 @@ around APISession.</p>
     <span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
         <span class="n">include_ext_alt_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-        <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets up to 100 tweets by their IDs.The result will be</span>
 <span class="sd">        a dictionary with keys representing the originally</span>
@@ -1527,7 +1595,7 @@ around APISession.</p>
 
 <span class="sd">        **Returns**</span>
 
-<span class="sd">        - `dict`  </span>
+<span class="sd">        - `Dict[[str, int], Tweet]`  </span>
 <span class="sd">          Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">          result Tweet object, which can be `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1537,6 +1605,29 @@ around APISession.</p>
             <span class="n">raise_on_none</span><span class="o">=</span><span class="n">raise_on_none</span><span class="p">,</span>
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">,</span>
             <span class="n">include_ext_alt_text</span><span class="o">=</span><span class="n">include_ext_alt_text</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">status_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of up to 100 retweet objects</span>
+<span class="sd">        of the passed tweet.</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the Tweet to get the list of</span>
+<span class="sd">          retweets from.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          The ammount of retweets to be collected</span>
+<span class="sd">          (in range of [1, 100]).  </span>
+<span class="sd">          *Default`: `None`*</span>
+
+<span class="sd">        **Returns**  </span>
+<span class="sd">        </span>
+<span class="sd">        - `List[Tweet]`  </span>
+<span class="sd">          List of Tweet objects representing the</span>
+<span class="sd">          retweets details.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 
     <span class="c1">###########</span>
     <span class="c1"># ALIASES #</span>
@@ -1549,7 +1640,7 @@ around APISession.</p>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Alias for Client#statuses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1583,6 +1674,42 @@ around APISession.</p>
   <div id="source-pytter.client.client.Client.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">:</span> <span class="n">Credentials</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.session">
+    <p>def <span class="ident">session</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns the clients APISession
+instance.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>APISession</code><br />
+  Initialized APISession instance.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.session', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.session" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">APISession</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the clients APISession</span>
+<span class="sd">    instance.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `APISession`  </span>
+<span class="sd">      Initialized APISession instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
 </pre></div>
 
   </div>
@@ -1733,6 +1860,64 @@ found by this ID, the result will be None.</p>
 <span class="sd">      retweet information.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.status_retweets">
+    <p>def <span class="ident">status_retweets</span>(</p><p>self, tweet_id, count=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of up to 100 retweet objects
+of the passed tweet.</p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the Tweet to get the list of
+  retweets from.</p>
+</li>
+<li>
+<p><code>count: int</code><br />
+  The ammount of retweets to be collected
+  (in range of [1, 100]).<br />
+<em>Default<code>:</code>None`</em></p>
+</li>
+</ul>
+<p><strong>Returns</strong>  </p>
+<ul>
+<li><code>List[Tweet]</code><br />
+  List of Tweet objects representing the
+  retweets details.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.status_retweets', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.status_retweets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">status_retweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tweet</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of up to 100 retweet objects</span>
+<span class="sd">    of the passed tweet.</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the Tweet to get the list of</span>
+<span class="sd">      retweets from.</span>
+<span class="sd">    - `count: int`  </span>
+<span class="sd">      The ammount of retweets to be collected</span>
+<span class="sd">      (in range of [1, 100]).  </span>
+<span class="sd">      *Default`: `None`*</span>
+<span class="sd">    **Returns**  </span>
+<span class="sd">    </span>
+<span class="sd">    - `List[Tweet]`  </span>
+<span class="sd">      List of Tweet objects representing the</span>
+<span class="sd">      retweets details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1949,7 +2134,7 @@ object, if found. Else, the value will be <code>None</code>.</p>
 </ul>
 <p><strong>Returns</strong></p>
 <ul>
-<li><code>dict</code><br />
+<li><code>Dict[[str, int], Tweet]</code><br />
   Tweet IDs as keys paired with the corresponding
   result Tweet object, which can be <code>None</code>.</li>
 </ul></div>
@@ -1959,7 +2144,7 @@ object, if found. Else, the value will be <code>None</code>.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
     <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
     <span class="n">include_ext_alt_text</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-    <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">raise_on_none</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets up to 100 tweets by their IDs.The result will be</span>
 <span class="sd">    a dictionary with keys representing the originally</span>
@@ -1983,7 +2168,7 @@ object, if found. Else, the value will be <code>None</code>.</p>
 <span class="sd">      will be risen if one of the Tweets is `None` (not found,</span>
 <span class="sd">      not existent or not accessable).</span>
 <span class="sd">    **Returns**</span>
-<span class="sd">    - `dict`  </span>
+<span class="sd">    - `Dict[[str, int], Tweet]`  </span>
 <span class="sd">      Tweet IDs as keys paired with the corresponding</span>
 <span class="sd">      result Tweet object, which can be `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2037,7 +2222,7 @@ object, if found. Else, the value will be <code>None</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.tweets', this);">Show source &equiv;</a></p>
   <div id="source-pytter.client.client.Client.tweets" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">tweets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tweet</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Alias for Client#statuses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

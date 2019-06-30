@@ -22,7 +22,7 @@ pytter is a work in progress Twitter API wrapper focused on light design and sim
 
 # Why?
 
-Yeah, there are still some very good API wrappers like [sixohsix/twitter](https://github.com/sixohsix/twitter) or [bear/python-twitter](https://github.com/bear/python-twitter), but for my own projects like [itsfriday](https://github.com/zekroTJA/itsfriday), I don't wanted to use such a huge - maybe overblown - library for this specific smal usecase of just handling with tweets. Most API wrappers are targeting to cover 100% of the Twitter API, so also a lot of stuff which is not necessary for my projects. So, I decided to create my own, lightweight wrapper just for those purposes.  
+Yeah, there are still some very good API wrappers like [sixohsix/twitter](https://github.com/sixohsix/twitter) or [bear/python-twitter](https://github.com/bear/python-twitter), but for my own projects like [itsfriday](https://github.com/zekroTJA/itsfriday), I don't wanted to use such a huge - maybe overblown - library for this specific small usecase of just handling with tweets. Most API wrappers are targeting to cover 100% of the Twitter API, so also a lot of stuff which is not necessary for my projects. So, I decided to create my own, lightweight wrapper just for those purposes.  
 Also, a project like that is perfect for practicing the work with API's and getting into Python, so this project also has some educational purpose. That's also why I am releasing this project at this very early state in development to - maybe - collect some improvements and ideas from more professional (Python) developers than me.
 
 ---
@@ -35,4 +35,5 @@ On [**this Trello board**](https://trello.com/b/BIRVsFUC/pytter), you can see cu
 
 # Docs 
 
-> soon
+Visit the auto-generated docs page:  
+https://docs.zekro.de/pytter

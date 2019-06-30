@@ -1,10 +1,10 @@
 """
 # pytter
 
-pytter is a work in progress Twitter API wrapper focused 
-on light design and simple implementation. Currently, 
-pytter will only support the Tweet, Direct messaging, 
-Media, Trends, Geo and Labs API and no Ads, Metrics, 
+pytter is a work in progress Twitter API wrapper focused
+on light design and simple implementation. Currently,
+pytter will only support the Tweet, Direct messaging,
+Media, Trends, Geo and Labs API and no Ads, Metrics,
 Premium or Enterprise API endpoints.
 
 """

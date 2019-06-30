@@ -259,8 +259,81 @@ class Client:
     # USERS #
     #########
 
-    def user(self, id: [str, int] = None, screen_name: str = None) -> User:
-        return self._session.users_show(id=id, screen_name=screen_name)
+    def user(self, 
+        id: [str, int] = None, 
+        screen_name: str = None,
+        include_entities: bool = True) -> User:
+        """
+        Get a user Object by its ID or screen name (Twitter handle).
+        At least one of both, ID or screen name, must be delivered.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the desired user.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          User name (Twitter handle) of the desired user.  
+          *Default: `None`*
+
+        - `include_entities: bool`  
+          Include entities node that may appear within
+          embedded statuses.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `User`  
+          Resulting User object.
+        """
+
+        return self._session.users_show(
+            id=id, 
+            screen_name=screen_name,
+            include_entities=include_entities)
+
+    def users(self, 
+        ids: List[str], 
+        screen_names: List[str],
+        include_entities: bool = True) -> Dict[str, User]:
+        """
+        Get a list of up to 100 users specified by their
+        IDs or screen names (Twitter handles). Neither
+        the list of IDs as same as the list of screen
+        names must not be empty.
+
+        **Parameters**
+
+        - `ids: List[str]`  
+          List of IDs of desired users.  
+          *Default: `None`*
+
+        - `screen_names: List[str]`  
+          List of screen names (Twitter handles) of the
+          desired users.  
+          *Default: `None`*
+
+        - `include_entities: bool`  
+          Include entities node that may appear within
+          embedded statuses.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `Dict[str, User]`  
+          A dict of user IDs and user names as keys
+          linked to the corresponding user objects.
+          So, for each user, there are two values in
+          the dict. Firstly linked to an ID key and 
+          secondly linked to the users user name as 
+          key.
+        """
+
+        return self._session.users_lookup(
+            ids=ids,
+            screen_names=screen_names,
+            include_entities=include_entities)
 
     ###########
     # ALIASES #

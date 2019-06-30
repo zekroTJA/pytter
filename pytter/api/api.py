@@ -675,7 +675,7 @@ class APISession:
 
         return User(res, self)
 
-    def users_lookup(self, ids: List[str] = None, screen_names: List[str] = None, **kwargs) -> List[User]:
+    def users_lookup(self, ids: List[str] = None, screen_names: List[str] = None, **kwargs) -> Dict[str, User]:
         """
         Fetches up to 100 users by their ids and/or screen
         names (Twitter handles).
@@ -697,8 +697,13 @@ class APISession:
 
         **Returns**
 
-        - `List[User]`  
-          Returns a list of fetched users.
+        - `Dict[str, User]`  
+          A dict of user IDs and user names as keys
+          linked to the corresponding user objects.
+          So, for each user, there are two values in
+          the dict. Firstly linked to an ID key and 
+          secondly linked to the users user name as 
+          key.
         """
 
         if not ids and not screen_names:
@@ -721,4 +726,10 @@ class APISession:
         if not res:
             return NoneResponseException()
 
-        return [User(r, self) for r in res]
+        users = {}
+        for r in res:
+          user = User(r, self)
+          users[user.id_str] = user
+          users[user.username or user.screen_name] = user
+
+        return users

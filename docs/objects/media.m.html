@@ -3,11 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>pytter API documentation</title>
-    <meta name="description" content="# pytter
-
-pytter is a work in progress Twitter API wrapper focused
-on light design and simple implem..." />
+    <title>pytter.objects.media API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1045,15 +1042,20 @@ table {
     <ul id="index">
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
-        <li class="mono"><a href="api/index.html">pytter.api</a></li>
-        <li class="mono"><a href="client/index.html">pytter.client</a></li>
-        <li class="mono"><a href="objects/index.html">pytter.objects</a></li>
-        <li class="mono"><a href="utils/index.html">pytter.utils</a></li>
+        <li class="mono">
+        <span class="class_name"><a href="#pytter.objects.media.Media">Media</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.objects.media.Media.__init__">__init__</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1065,38 +1067,32 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">pytter</span> module</h1>
-  <h1>pytter</h1>
-<p>pytter is a work in progress Twitter API wrapper focused
-on light design and simple implementation. Currently,
-pytter will only support the Tweet, Direct messaging,
-Media, Trends, Geo and Labs API and no Ads, Metrics,
-Premium or Enterprise API endpoints.</p>
+  <h1 class="title"><span class="name">pytter.objects.media</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter', this);">Show source &equiv;</a></p>
-  <div id="source-pytter" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"># pytter</span>
-
-<span class="sd">pytter is a work in progress Twitter API wrapper focused</span>
-<span class="sd">on light design and simple implementation. Currently,</span>
-<span class="sd">pytter will only support the Tweet, Direct messaging,</span>
-<span class="sd">Media, Trends, Geo and Labs API and no Ads, Metrics,</span>
-<span class="sd">Premium or Enterprise API endpoints.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="n">__title__</span> <span class="o">=</span> <span class="s1">&#39;pytter&#39;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;zekro&#39;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;Apache Licence 2.0&#39;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;(c) 2019 Ringo Hoffmann (zekro Development)&#39;</span>
-<span class="n">__url__</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/zekrotja/pytter&#39;</span>
-
-<span class="kn">from</span> <span class="nn">.client</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.objects</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="o">*</span>
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.media', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.media" class="source">
+    <div class="codehilite"><pre><span></span><span class="n">lass</span> <span class="n">Media</span><span class="p">:</span>
+   <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Media object for videos, images or gifs attached to tweets.</span>
+<span class="sd">   Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#media</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+   
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
+       <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+           <span class="k">return</span> <span class="bp">None</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">display_url</span>            <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_url&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">id</span>                     <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>                 <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">media_url</span>              <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">media_url_https</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url_https&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">size</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">url</span>                    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id_str</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id_str&#39;</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">type</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1106,32 +1102,200 @@ Premium or Enterprise API endpoints.</p>
   <section id="section-items">
 
 
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
       <div class="item">
-      <p class="name"><a href="api/index.html">pytter.api</a></p>
+      <p id="pytter.objects.media.Media" class="name">class <span class="ident">Media</span></p>
       
   
+    <div class="desc"><p>Media object for videos, images or gifs attached to tweets.
+Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#media</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.media.Media', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.media.Media" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Media</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Media object for videos, images or gifs attached to tweets.</span>
+<span class="sd">    Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/entities-object#media</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_url</span>            <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span>                     <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>                 <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">media_url</span>              <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">media_url_https</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url_https&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span>                    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id_str</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id_str&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
+</pre></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="client/index.html">pytter.client</a></p>
-      
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.objects.media.Media">Media</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.media.Media.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, data={})</p>
+    </div>
+    
+
+    
   
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.media.Media.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.media.Media.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display_url</span>            <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display_url&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id</span>                     <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>                 <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">media_url</span>              <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">media_url_https</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;media_url_https&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">size</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">url</span>                    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">expanded_url</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expanded_url&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">source_status_id_str</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;source_status_id_str&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span>                   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">)</span>
+</pre></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="objects/index.html">pytter.objects</a></p>
-      
+  </div>
+</div>
+
+  </div>
   
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="pytter.objects.media.Media.display_url" class="name">var <span class="ident">display_url</span></p>
+            
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="utils/index.html">pytter.utils</a></p>
-      
+            
   
+  <div class="source_cont">
+</div>
 
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.expanded_url" class="name">var <span class="ident">expanded_url</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.id" class="name">var <span class="ident">id</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.id_str" class="name">var <span class="ident">id_str</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.media_url" class="name">var <span class="ident">media_url</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.media_url_https" class="name">var <span class="ident">media_url_https</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.size" class="name">var <span class="ident">size</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.source_status_id" class="name">var <span class="ident">source_status_id</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.source_status_id_str" class="name">var <span class="ident">source_status_id_str</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.objects.media.Media.url" class="name">var <span class="ident">url</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
+      </div>
+
   </section>
 
     </article>

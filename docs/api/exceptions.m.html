@@ -3,11 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>pytter API documentation</title>
-    <meta name="description" content="# pytter
-
-pytter is a work in progress Twitter API wrapper focused
-on light design and simple implem..." />
+    <title>pytter.api.exceptions API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1045,15 +1042,47 @@ table {
     <ul id="index">
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
-        <li class="mono"><a href="api/index.html">pytter.api</a></li>
-        <li class="mono"><a href="client/index.html">pytter.client</a></li>
-        <li class="mono"><a href="objects/index.html">pytter.objects</a></li>
-        <li class="mono"><a href="utils/index.html">pytter.utils</a></li>
+        <li class="mono">
+        <span class="class_name"><a href="#pytter.api.exceptions.NoneResponseException">NoneResponseException</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.api.exceptions.NoneResponseException.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#pytter.api.exceptions.ParameterNoneException">ParameterNoneException</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.api.exceptions.ParameterNoneException.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#pytter.api.exceptions.ParameterOutOfBoundsException">ParameterOutOfBoundsException</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.api.exceptions.ParameterOutOfBoundsException.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#pytter.api.exceptions.RateLimitException">RateLimitException</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#pytter.api.exceptions.RateLimitException.__init__">__init__</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1065,38 +1094,31 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">pytter</span> module</h1>
-  <h1>pytter</h1>
-<p>pytter is a work in progress Twitter API wrapper focused
-on light design and simple implementation. Currently,
-pytter will only support the Tweet, Direct messaging,
-Media, Trends, Geo and Labs API and no Ads, Metrics,
-Premium or Enterprise API endpoints.</p>
+  <h1 class="title"><span class="name">pytter.api.exceptions</span> module</h1>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter', this);">Show source &equiv;</a></p>
-  <div id="source-pytter" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd"># pytter</span>
-
-<span class="sd">pytter is a work in progress Twitter API wrapper focused</span>
-<span class="sd">on light design and simple implementation. Currently,</span>
-<span class="sd">pytter will only support the Tweet, Direct messaging,</span>
-<span class="sd">Media, Trends, Geo and Labs API and no Ads, Metrics,</span>
-<span class="sd">Premium or Enterprise API endpoints.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="n">__title__</span> <span class="o">=</span> <span class="s1">&#39;pytter&#39;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;zekro&#39;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;Apache Licence 2.0&#39;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;(c) 2019 Ringo Hoffmann (zekro Development)&#39;</span>
-<span class="n">__url__</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/zekrotja/pytter&#39;</span>
-
-<span class="kn">from</span> <span class="nn">.client</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.objects</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.api</span> <span class="kn">import</span> <span class="o">*</span>
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions" class="source">
+    <div class="codehilite"><pre><span></span><span class="n">lass</span> <span class="n">RateLimitException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+   <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;rate limit exceeded&#39;</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+<span class="n">lass</span> <span class="n">NoneResponseException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+   <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;response was None&#39;</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+<span class="n">lass</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+   <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;parameter out of bounds&#39;</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+       <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+<span class="n">lass</span> <span class="n">ParameterNoneException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+   <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;none parameters given&#39;</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+       <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1106,32 +1128,308 @@ Premium or Enterprise API endpoints.</p>
   <section id="section-items">
 
 
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
       <div class="item">
-      <p class="name"><a href="api/index.html">pytter.api</a></p>
+      <p id="pytter.api.exceptions.NoneResponseException" class="name">class <span class="ident">NoneResponseException</span></p>
       
   
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.NoneResponseException', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.NoneResponseException" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">NoneResponseException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;response was None&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
 
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.api.exceptions.NoneResponseException">NoneResponseException</a></li>
+          <li><a href="/builtins.Exception.ext">builtins.Exception</a></li>
+          <li><a href="/builtins.BaseException.ext">builtins.BaseException</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="pytter.api.exceptions.NoneResponseException.MESSAGE" class="name">var <span class="ident">MESSAGE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.api.exceptions.NoneResponseException.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.exceptions.NoneResponseException.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.NoneResponseException.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.NoneResponseException.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
+      </div>
+      
       <div class="item">
-      <p class="name"><a href="client/index.html">pytter.client</a></p>
+      <p id="pytter.api.exceptions.ParameterNoneException" class="name">class <span class="ident">ParameterNoneException</span></p>
       
   
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.ParameterNoneException', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.ParameterNoneException" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ParameterNoneException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;none parameters given&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
 
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.api.exceptions.ParameterNoneException">ParameterNoneException</a></li>
+          <li><a href="/builtins.Exception.ext">builtins.Exception</a></li>
+          <li><a href="/builtins.BaseException.ext">builtins.BaseException</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="pytter.api.exceptions.ParameterNoneException.MESSAGE" class="name">var <span class="ident">MESSAGE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.api.exceptions.ParameterNoneException.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.exceptions.ParameterNoneException.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, additional_description=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.ParameterNoneException.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.ParameterNoneException.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
+      </div>
+      
       <div class="item">
-      <p class="name"><a href="objects/index.html">pytter.objects</a></p>
+      <p id="pytter.api.exceptions.ParameterOutOfBoundsException" class="name">class <span class="ident">ParameterOutOfBoundsException</span></p>
       
   
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.ParameterOutOfBoundsException', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.ParameterOutOfBoundsException" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ParameterOutOfBoundsException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;parameter out of bounds&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
 
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.api.exceptions.ParameterOutOfBoundsException">ParameterOutOfBoundsException</a></li>
+          <li><a href="/builtins.Exception.ext">builtins.Exception</a></li>
+          <li><a href="/builtins.BaseException.ext">builtins.BaseException</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="pytter.api.exceptions.ParameterOutOfBoundsException.MESSAGE" class="name">var <span class="ident">MESSAGE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.api.exceptions.ParameterOutOfBoundsException.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.exceptions.ParameterOutOfBoundsException.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, additional_description=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.ParameterOutOfBoundsException.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.ParameterOutOfBoundsException.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">additional_description</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span> <span class="o">+=</span> <span class="s1">&#39;: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_description</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
+      </div>
+      
       <div class="item">
-      <p class="name"><a href="utils/index.html">pytter.utils</a></p>
+      <p id="pytter.api.exceptions.RateLimitException" class="name">class <span class="ident">RateLimitException</span></p>
       
   
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.RateLimitException', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.RateLimitException" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">RateLimitException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;rate limit exceeded&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
 
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#pytter.api.exceptions.RateLimitException">RateLimitException</a></li>
+          <li><a href="/builtins.Exception.ext">builtins.Exception</a></li>
+          <li><a href="/builtins.BaseException.ext">builtins.BaseException</a></li>
+          <li><a href="/builtins.object.ext">builtins.object</a></li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="pytter.api.exceptions.RateLimitException.MESSAGE" class="name">var <span class="ident">MESSAGE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="pytter.api.exceptions.RateLimitException.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.exceptions.RateLimitException.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.exceptions.RateLimitException.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.exceptions.RateLimitException.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
+      </div>
+
   </section>
 
     </article>

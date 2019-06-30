@@ -89,7 +89,7 @@ class APISession:
             raise RateLimitException()
 
         if not res.ok:
-            raise Exception('request failed with status code {0} and message: {}'
+            raise Exception('request failed with status code {} and message: {}'
                 .format(res.status_code, res.text))
 
         return res.json()
@@ -636,7 +636,7 @@ class APISession:
 
     def users_show(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> User:
         """
-        fetches a single user by its ID or screen name
+        Fetches a single user by its ID or screen name
         (Twitter handle).
 
         **Parameters**
@@ -664,12 +664,14 @@ class APISession:
             raise ParameterNoneException()
 
         data = kwargs
-        if id: data['user_id'] = id
-        if screen_name: data['screen_name'] = screen_name
+        if id: 
+            data['user_id'] = id
+        if screen_name: 
+            data['screen_name'] = screen_name
 
         res = self.request('GET', 'users/show.json', params=data)
         if not res:
-          raise NoneResponseException()
+            raise NoneResponseException()
 
         return User(res, self)
 

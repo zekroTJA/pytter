@@ -4,7 +4,7 @@ from typing import Dict, List
 
 from ..utils import utils
 from ..api import APISession, Credentials
-from ..objects import Tweet, Place
+from ..objects import Tweet, Place, User
 
 
 class Client:
@@ -254,6 +254,13 @@ class Client:
         """
 
         return self._session.statuses_retweets(id=tweet_id, count=count)
+
+    #########
+    # USERS #
+    #########
+
+    def user(self, id: [str, int] = None, screen_name: str = None) -> User:
+        return self._session.users_show(id=id, screen_name=screen_name)
 
     ###########
     # ALIASES #

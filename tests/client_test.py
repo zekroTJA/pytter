@@ -16,10 +16,12 @@ def wait_rand():
 
 class ClientTest(unittest.TestCase):
     
-    TEST_IMG = 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.golang.org%2Fgophergala%2Ffancygopher.jpg'
-    TEST_TXT = 'Hey, was geht ab!'
-    TEST_HT  = 'justatestbo12738123123'
-    TEST_CTX = '{} #{}'.format(TEST_TXT, TEST_HT)
+    TEST_IMG       = 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.golang.org%2Fgophergala%2Ffancygopher.jpg'
+    TEST_TXT       = 'Hey, was geht ab!'
+    TEST_HT        = 'justatestbo12738123123'
+    TEST_CTX       = '{} #{}'.format(TEST_TXT, TEST_HT)
+    TEST_USER_NAME = 'zekroTJA'
+    TEST_USER_ID   = '2337066550'
 
     def setUp(self):
         self.travis_mode = not not os.environ.get('travis_ci_mode')
@@ -109,6 +111,22 @@ class ClientTest(unittest.TestCase):
         self.assertIsNotNone(rts)
         self.assertEqual(len(rts), 1)
         # TODO: expand test
+
+    def test_user(self):
+        if self.travis_mode: wait_rand()
+
+        client = Client(self.credentials)
+
+        u_by_id = client.user(id=self.TEST_USER_ID)
+        self.assertIsNotNone(u_by_id)
+        u_by_name = client.user(screen_name=self.TEST_USER_NAME)
+        self.assertIsNotNone(u_by_name)
+
+        self.assertEqual(u_by_id.id_str, u_by_name.id_str)
+        self.assertEqual(u_by_id.username, u_by_name.username)
+
+    # TODO: add test_users
+        
 
 
 if __name__ == '__main__':

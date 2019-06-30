@@ -11,4 +11,7 @@ install:
   - pip install -e .
 
 script:
+  # run tests
   - python3 -m unittest tests/*.py -v
+  # run examples
+  - python3 examples/*.py

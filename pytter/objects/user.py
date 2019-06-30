@@ -22,11 +22,10 @@ class User:
     User object.
     Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object
     """
-    
+
     def __init__(self, data: dict = {}, session = None):
         self._session = session
 
-    def __init__(self, data: dict = {}):
         self.id_str             = data.get('id') or data.get('id_str')
         self.created_at         = data.get('created_at')
         self.name               = data.get('name')

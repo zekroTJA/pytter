@@ -8,7 +8,8 @@ from requests_oauthlib import OAuth2
 from .credentials import Credentials
 from .exceptions import (
     RateLimitException, NoneResponseException, 
-    ParameterOutOfBoundsException
+    ParameterOutOfBoundsException,
+    ParameterNoneException
 )
 
 from ..utils import utils
@@ -416,7 +417,7 @@ class APISession:
         
         return Tweet(res, self)
 
-    def statuses_lookup(self, ids: list, raise_on_none: bool = False, **kwargs) -> Dict[str, Tweet]:
+    def statuses_lookup(self, ids: List[str], raise_on_none: bool = False, **kwargs) -> Dict[str, Tweet]:
         """
         Get details about up to 100 tweets. The returned
         dictionary keys represent the original requested
@@ -634,37 +635,88 @@ class APISession:
     #############
 
     def users_show(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> User:
-      """
-      fetches a single user by its ID or screen name
-      (Twitter handle).
+        """
+        fetches a single user by its ID or screen name
+        (Twitter handle).
 
-      **Parameters**
+        **Parameters**
 
-      - `id: [str, int]`  
-        ID of the desired user.  
-        *Default: `None`*
+        - `id: [str, int]`  
+          ID of the desired user.  
+          *Default: `None`*
 
-      - `screen_name: str`  
-        Screen name (handle) of the
-        desired user.  
-        *Default: `None`*
+        - `screen_name: str`  
+          Screen name (handle) of the
+          desired user.  
+          *Default: `None`*
 
-      - `**kwargs:`  
-        Additional agruments passed directly to the 
-        request parameters.
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
 
-      **Returns**
+        **Returns**
 
-      - `User`  
-        Fetched user object.
-      """
+        - `User`  
+          Fetched user object.
+        """
 
-      data = kwargs
-      if id: data['user_id'] = id
-      if screen_name: data['screen_name'] = screen_name
+        if not id and not screen_name:
+            raise ParameterNoneException()
 
-      res = self.request('GET', 'users/show.json', params=data)
-      if not res:
-        raise NoneResponseException()
+        data = kwargs
+        if id: data['user_id'] = id
+        if screen_name: data['screen_name'] = screen_name
 
-      return User(res, self)
+        res = self.request('GET', 'users/show.json', params=data)
+        if not res:
+          raise NoneResponseException()
+
+        return User(res, self)
+
+    def users_lookup(self, ids: List[str] = None, screen_names: List[str] = None, **kwargs) -> List[User]:
+        """
+        Fetches up to 100 users by their ids and/or screen
+        names (Twitter handles).
+
+        **Parameters**
+
+        - `ids: List[str]`  
+          List of desired user IDs.  
+          *Default: `none`*
+
+        - `screen_names: List[str]`  
+          List of desired user screen names
+          (handles).  
+          *Default: `none`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `List[User]`  
+          Returns a list of fetched users.
+        """
+
+        if not ids and not screen_names:
+            raise ParameterNoneException()
+
+        data = kwargs
+        ln = 0
+        if ids and len(ids) > 0:
+            data['id'] = ','.join([str(id) for id in ids])
+            ln += len(ids)
+        if screen_names and len(screen_names) > 0:
+            data['screen_name'] = ','.join(screen_names)
+            ln += ln(screen_names)
+
+        if ln < 1 or ln > 100:
+            raise ParameterOutOfBoundsException(
+                'ids + screen_names length must be in range [1, 100]')
+
+        res = self.request('GET', 'users/lookup.json', params=data)
+        if not res:
+            return NoneResponseException()
+
+        return [User(r, self) for r in res]

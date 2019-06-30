@@ -16,3 +16,10 @@ class ParameterOutOfBoundsException(Exception):
         if additional_description:
             self.MESSAGE += ': {}'.format(additional_description)
         super().__init__(self.MESSAGE)
+
+class ParameterNoneException(Exception):
+    MESSAGE = 'none parameters given'
+    def __init__(self, additional_description: str = None):
+        if additional_description:
+            self.MESSAGE += ': {}'.format(additional_description)
+        super().__init__(self.MESSAGE)

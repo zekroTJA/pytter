@@ -25,8 +25,6 @@ class Client:
     def __init__(self, credentials: Credentials):
         self._session = APISession(credentials)
 
-<<<<<<< HEAD
-=======
     def session(self) -> APISession:
         """
         Returns the clients APISession
@@ -40,7 +38,6 @@ class Client:
         
         return self._session
 
->>>>>>> master
     ############
     # STATUSES #
     ############

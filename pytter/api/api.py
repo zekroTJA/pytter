@@ -11,7 +11,7 @@ from .exceptions import (
 )
 
 from ..utils import utils
-from ..objects import Tweet, Media
+from ..objects import Tweet, Media, User
 from ..utils import FileInfo
 
 
@@ -531,3 +531,43 @@ class APISession:
             return NoneResponseException()
 
         return Tweet(res)
+
+    #############
+    # USERS API #
+    #############
+
+    def users_show(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> User:
+      """
+      fetches a single user by its ID or screen name
+      (Twitter handle).
+
+      **Parameters**
+
+      - `id: [str, int]`  
+        ID of the desired user.  
+        *Default: `None`*
+
+      - `screen_name: str`  
+        Screen name (handle) of the
+        desired user.  
+        *Default: `None`*
+
+      - `**kwargs:`  
+        Additional agruments passed directly to the 
+        request parameters.
+
+      **Returns**
+
+      - `User`  
+        Fetched user object.
+      """
+
+      data = kwargs
+      if id: data['user_id'] = id
+      if screen_name: data['screen_name'] = screen_name
+
+      res = self.request('GET', 'users/show.json', params=data)
+      if not res:
+        raise NoneResponseException()
+
+      return User(res, self)

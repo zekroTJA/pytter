@@ -1,4 +1,9 @@
 
+class NoSessionException(Exception):
+    MESSAGE = 'session is not set to tweet instance'
+    def __init__(self):
+        super().__init__(self.MESSAGE)
+
 class UserStats:
     def __init__(self, data: dict = {}):
         self.followers_count    = data.get('followers_count')
@@ -7,7 +12,9 @@ class UserStats:
         self.listed_count       = data.get('listed_count')
 
 class User:
-    def __init__(self, data: dict = {}):
+    def __init__(self, data: dict = {}, session = None):
+        self._session = session
+
         self.id_str             = data.get('id') or data.get('id_str')
         self.created_at         = data.get('created_at')
         self.name               = data.get('name')

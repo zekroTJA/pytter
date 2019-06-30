@@ -20,6 +20,10 @@ class Client:
     def __init__(self, credentials: Credentials):
         self._session = APISession(credentials)
 
+    ############
+    # STATUSES #
+    ############
+
     def status_update(self, 
         text: str, 
         media: list = [],

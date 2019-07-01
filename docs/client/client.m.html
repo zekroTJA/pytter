@@ -1380,14 +1380,16 @@ table {
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-        <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
-        <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of up to 100 users specified by their</span>
-<span class="sd">        IDs or screen names (Twitter handles). Neither</span>
+<span class="sd">        IDs OR screen names (Twitter handles). Neither</span>
 <span class="sd">        the list of IDs as same as the list of screen</span>
 <span class="sd">        names must not be empty.</span>
+<span class="sd">        IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">        value list will be prefered.</span>
 
 <span class="sd">        **Parameters**</span>
 
@@ -1750,14 +1752,16 @@ around APISession.</p>
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-        <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
-        <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
         <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get a list of up to 100 users specified by their</span>
-<span class="sd">        IDs or screen names (Twitter handles). Neither</span>
+<span class="sd">        IDs OR screen names (Twitter handles). Neither</span>
 <span class="sd">        the list of IDs as same as the list of screen</span>
 <span class="sd">        names must not be empty.</span>
+<span class="sd">        IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">        value list will be prefered.</span>
 
 <span class="sd">        **Parameters**</span>
 
@@ -2470,16 +2474,18 @@ At least one of both, ID or screen name, must be delivered.</p>
             
   <div class="item">
     <div class="name def" id="pytter.client.client.Client.users">
-    <p>def <span class="ident">users</span>(</p><p>self, ids, screen_names, include_entities=True)</p>
+    <p>def <span class="ident">users</span>(</p><p>self, ids=None, screen_names=None, include_entities=True)</p>
     </div>
     
 
     
   
     <div class="desc"><p>Get a list of up to 100 users specified by their
-IDs or screen names (Twitter handles). Neither
+IDs OR screen names (Twitter handles). Neither
 the list of IDs as same as the list of screen
-names must not be empty.</p>
+names must not be empty.
+IDs and screen names can no be mixed. Screen names
+value list will be prefered.</p>
 <p><strong>Parameters</strong></p>
 <ul>
 <li>
@@ -2514,14 +2520,16 @@ names must not be empty.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.users', this);">Show source &equiv;</a></p>
   <div id="source-pytter.client.client.Client.users" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
-    <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
-    <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+    <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
     <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a list of up to 100 users specified by their</span>
-<span class="sd">    IDs or screen names (Twitter handles). Neither</span>
+<span class="sd">    IDs OR screen names (Twitter handles). Neither</span>
 <span class="sd">    the list of IDs as same as the list of screen</span>
 <span class="sd">    names must not be empty.</span>
+<span class="sd">    IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">    value list will be prefered.</span>
 <span class="sd">    **Parameters**</span>
 <span class="sd">    - `ids: List[str]`  </span>
 <span class="sd">      List of IDs of desired users.  </span>

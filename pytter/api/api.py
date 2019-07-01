@@ -677,8 +677,10 @@ class APISession:
 
     def users_lookup(self, ids: List[str] = None, screen_names: List[str] = None, **kwargs) -> Dict[str, User]:
         """
-        Fetches up to 100 users by their ids and/or screen
+        Fetches up to 100 users by their ids OR screen
         names (Twitter handles).
+        IDs and screen names can no be mixed. Screen names
+        value list will be prefered.
 
         **Parameters**
 
@@ -712,11 +714,11 @@ class APISession:
         data = kwargs
         ln = 0
         if ids and len(ids) > 0:
-            data['id'] = ','.join([str(id) for id in ids])
+            data['user_id'] = ','.join([str(id) for id in ids])
             ln += len(ids)
         if screen_names and len(screen_names) > 0:
             data['screen_name'] = ','.join(screen_names)
-            ln += ln(screen_names)
+            ln += len(screen_names)
 
         if ln < 1 or ln > 100:
             raise ParameterOutOfBoundsException(

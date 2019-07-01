@@ -1766,8 +1766,10 @@ table {
 
     <span class="k">def</span> <span class="nf">users_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fetches up to 100 users by their ids and/or screen</span>
+<span class="sd">        Fetches up to 100 users by their ids OR screen</span>
 <span class="sd">        names (Twitter handles).</span>
+<span class="sd">        IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">        value list will be prefered.</span>
 
 <span class="sd">        **Parameters**</span>
 
@@ -1801,11 +1803,11 @@ table {
         <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">ids</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
             <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">screen_names</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
-            <span class="n">ln</span> <span class="o">+=</span> <span class="n">ln</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
+            <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span>
@@ -2509,8 +2511,10 @@ for authentication and authorization.</p>
 
     <span class="k">def</span> <span class="nf">users_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fetches up to 100 users by their ids and/or screen</span>
+<span class="sd">        Fetches up to 100 users by their ids OR screen</span>
 <span class="sd">        names (Twitter handles).</span>
+<span class="sd">        IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">        value list will be prefered.</span>
 
 <span class="sd">        **Parameters**</span>
 
@@ -2544,11 +2548,11 @@ for authentication and authorization.</p>
         <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">ids</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
             <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">screen_names</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">data</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
-            <span class="n">ln</span> <span class="o">+=</span> <span class="n">ln</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
+            <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span>
@@ -3641,8 +3645,10 @@ the chunked twitter media upload endpoint.</p>
 
     
   
-    <div class="desc"><p>Fetches up to 100 users by their ids and/or screen
-names (Twitter handles).</p>
+    <div class="desc"><p>Fetches up to 100 users by their ids OR screen
+names (Twitter handles).
+IDs and screen names can no be mixed. Screen names
+value list will be prefered.</p>
 <p><strong>Parameters</strong></p>
 <ul>
 <li>
@@ -3677,8 +3683,10 @@ names (Twitter handles).</p>
   <div id="source-pytter.api.api.APISession.users_lookup" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">users_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">User</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fetches up to 100 users by their ids and/or screen</span>
+<span class="sd">    Fetches up to 100 users by their ids OR screen</span>
 <span class="sd">    names (Twitter handles).</span>
+<span class="sd">    IDs and screen names can no be mixed. Screen names</span>
+<span class="sd">    value list will be prefered.</span>
 <span class="sd">    **Parameters**</span>
 <span class="sd">    - `ids: List[str]`  </span>
 <span class="sd">      List of desired user IDs.  </span>
@@ -3704,11 +3712,11 @@ names (Twitter handles).</p>
     <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
     <span class="n">ln</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="n">ids</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span>
         <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">screen_names</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">data</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
-        <span class="n">ln</span> <span class="o">+=</span> <span class="n">ln</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
+        <span class="n">ln</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">screen_names</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ln</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">ln</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span>
             <span class="s1">&#39;ids + screen_names length must be in range [1, 100]&#39;</span><span class="p">)</span>

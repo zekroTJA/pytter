@@ -294,14 +294,16 @@ class Client:
             include_entities=include_entities)
 
     def users(self, 
-        ids: List[str], 
-        screen_names: List[str],
+        ids: List[str] = None, 
+        screen_names: List[str] = None,
         include_entities: bool = True) -> Dict[str, User]:
         """
         Get a list of up to 100 users specified by their
-        IDs or screen names (Twitter handles). Neither
+        IDs OR screen names (Twitter handles). Neither
         the list of IDs as same as the list of screen
         names must not be empty.
+        IDs and screen names can no be mixed. Screen names
+        value list will be prefered.
 
         **Parameters**
 

@@ -30,7 +30,8 @@ deps:
 
 test:
 	[ "$(CASE)" != "" ] &&\
-		$(PY) -m unittest -v tests.$(CASE) ||\
+		$(PY) -m unittest -v tests.$(CASE)
+	[ "$(CASE)" != "" ] ||\
 		$(PY) -m unittest -v tests/*.py
 
 docs:

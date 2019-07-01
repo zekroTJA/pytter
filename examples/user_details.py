@@ -1,4 +1,5 @@
 import os
+import sys
 from pytter import Client, Credentials
 
 
@@ -11,7 +12,9 @@ def main():
     
     client = Client(creds)
 
-    user = client.user(screen_name='zekrotja')
+    user_name = sys.argv[1] if len(sys.argv) > 1 else 'zekroTJA'
+
+    user = client.user(screen_name=user_name)
 
     print((
         "\nUsername:      {}\n" +

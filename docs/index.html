@@ -1072,6 +1072,21 @@ on light design and simple implementation. Currently,
 pytter will only support the Tweet, Direct messaging,
 Media, Trends, Geo and Labs API and no Ads, Metrics,
 Premium or Enterprise API endpoints.</p>
+<p><strong>*Usage Example</strong></p>
+<p>```python
+from pytter import Client, Credentials</p>
+<p>creds = Credentials(
+    consumer_key='yourConsumerKey',
+    consumer_secret='yourConsumerSecret',
+    access_token_key='yourAccessTokenKey,
+    access_token_secret='yourAccesTokenSecret')</p>
+<p>client = Client(creds)</p>
+<p>tweet = client.status_update('Hey Twitter API!')
+print('Tweet ID: {}'.format(tweet.id_str))
+```</p>
+<p>Here you can find more examples using pytter:
+- <a href="https://github.com/zekroTJA/pytter/tree/master/examples">examples in master-branch</a>
+- <a href="https://github.com/zekroTJA/pytter/tree/dev/examples">examples in dev-branch</a></p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter', this);">Show source &equiv;</a></p>
   <div id="source-pytter" class="source">
@@ -1083,6 +1098,27 @@ Premium or Enterprise API endpoints.</p>
 <span class="sd">pytter will only support the Tweet, Direct messaging,</span>
 <span class="sd">Media, Trends, Geo and Labs API and no Ads, Metrics,</span>
 <span class="sd">Premium or Enterprise API endpoints.</span>
+
+<span class="sd">***Usage Example**</span>
+
+<span class="sd">```python</span>
+<span class="sd">from pytter import Client, Credentials</span>
+
+<span class="sd">creds = Credentials(</span>
+<span class="sd">    consumer_key=&#39;yourConsumerKey&#39;,</span>
+<span class="sd">    consumer_secret=&#39;yourConsumerSecret&#39;,</span>
+<span class="sd">    access_token_key=&#39;yourAccessTokenKey,</span>
+<span class="sd">    access_token_secret=&#39;yourAccesTokenSecret&#39;)</span>
+<span class="sd">    </span>
+<span class="sd">client = Client(creds)</span>
+
+<span class="sd">tweet = client.status_update(&#39;Hey Twitter API!&#39;)</span>
+<span class="sd">print(&#39;Tweet ID: {}&#39;.format(tweet.id_str))</span>
+<span class="sd">```</span>
+
+<span class="sd">Here you can find more examples using pytter:</span>
+<span class="sd">- [examples in master-branch](https://github.com/zekroTJA/pytter/tree/master/examples)</span>
+<span class="sd">- [examples in dev-branch](https://github.com/zekroTJA/pytter/tree/dev/examples)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 

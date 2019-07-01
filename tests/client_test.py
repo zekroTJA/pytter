@@ -16,12 +16,14 @@ def wait_rand():
 
 class ClientTest(unittest.TestCase):
     
-    TEST_IMG       = 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.golang.org%2Fgophergala%2Ffancygopher.jpg'
-    TEST_TXT       = 'Hey, was geht ab!'
-    TEST_HT        = 'justatestbo12738123123'
-    TEST_CTX       = '{} #{}'.format(TEST_TXT, TEST_HT)
-    TEST_USER_NAME = 'zekroTJA'
-    TEST_USER_ID   = '2337066550'
+    TEST_IMG            = 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.golang.org%2Fgophergala%2Ffancygopher.jpg'
+    TEST_TXT            = 'Hey, was geht ab!'
+    TEST_HT             = 'justatestbo12738123123'
+    TEST_CTX            = '{} #{}'.format(TEST_TXT, TEST_HT)
+    TEST_USER_NAME      = 'zekroTJA'
+    TEST_USER_ID        = '2337066550'
+    TEST_USER_SET_IDS   = ['2337066550', '1425765498']
+    TEST_USER_SET_NAMES = ['luxtracon', 'h0denharald']
 
     def setUp(self):
         self.travis_mode = not not os.environ.get('travis_ci_mode')
@@ -125,8 +127,30 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(u_by_id.id_str, u_by_name.id_str)
         self.assertEqual(u_by_id.username, u_by_name.username)
 
-    # TODO: add test_users
-        
+    def test_users(self):
+        if self.travis_mode: wait_rand()
+
+        client = Client(self.credentials)
+
+        users = client.users(
+            ids=self.TEST_USER_SET_IDS)
+        self.assertIsNotNone(users)
+        u_1_id = self.TEST_USER_SET_IDS[0]
+        u_2_id = self.TEST_USER_SET_IDS[1]
+        self.assertEqual(users[u_1_id].id_str, u_1_id)
+        self.assertEqual(users[u_1_id].id_str, u_1_id)
+        self.assertEqual(users[u_2_id].id_str, u_2_id)
+        self.assertEqual(users[u_2_id].id_str, u_2_id)
+
+        users = client.users(
+            screen_names=self.TEST_USER_SET_NAMES)
+        self.assertIsNotNone(users)
+        u_1_id = self.TEST_USER_SET_NAMES[0]
+        u_2_id = self.TEST_USER_SET_NAMES[1]
+        self.assertEqual(users[u_1_id].username, u_1_id)
+        self.assertEqual(users[u_1_id].username, u_1_id)
+        self.assertEqual(users[u_2_id].username, u_2_id)
+        self.assertEqual(users[u_2_id].username, u_2_id)
 
 
 if __name__ == '__main__':

@@ -1072,21 +1072,71 @@ on light design and simple implementation. Currently,
 pytter will only support the Tweet, Direct messaging,
 Media, Trends, Geo and Labs API and no Ads, Metrics,
 Premium or Enterprise API endpoints.</p>
-<p><strong>*Usage Example</strong></p>
-<p>```python
-from pytter import Client, Credentials</p>
-<p>creds = Credentials(
-    consumer_key='yourConsumerKey',
-    consumer_secret='yourConsumerSecret',
-    access_token_key='yourAccessTokenKey,
-    access_token_secret='yourAccesTokenSecret')</p>
-<p>client = Client(creds)</p>
-<p>tweet = client.status_update('Hey Twitter API!')
-print('Tweet ID: {}'.format(tweet.id_str))
-```</p>
-<p>Here you can find more examples using pytter:
-- <a href="https://github.com/zekroTJA/pytter/tree/master/examples">examples in master-branch</a>
-- <a href="https://github.com/zekroTJA/pytter/tree/dev/examples">examples in dev-branch</a></p>
+<h2>Usage Example</h2>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pytter</span> <span class="kn">import</span> <span class="n">Client</span><span class="p">,</span> <span class="n">Credentials</span>
+
+<span class="n">creds</span> <span class="o">=</span> <span class="n">Credentials</span><span class="p">(</span>
+    <span class="n">consumer_key</span><span class="o">=</span><span class="s1">&#39;yourConsumerKey&#39;</span><span class="p">,</span>
+    <span class="n">consumer_secret</span><span class="o">=</span><span class="s1">&#39;yourConsumerSecret&#39;</span><span class="p">,</span>
+    <span class="n">access_token_key</span><span class="o">=</span><span class="s1">&#39;yourAccessTokenKey,</span>
+    <span class="n">access_token_secret</span><span class="o">=</span><span class="s1">&#39;yourAccesTokenSecret&#39;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">creds</span><span class="p">)</span>
+
+<span class="n">tweet</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">status_update</span><span class="p">(</span><span class="s1">&#39;Hey Twitter API!&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Tweet ID: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tweet</span><span class="o">.</span><span class="n">id_str</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Here you can find more examples using pytter:<br />
+- <a href="https://github.com/zekroTJA/pytter/tree/master/examples">examples in master-branch</a><br />
+- <a href="https://github.com/zekroTJA/pytter/tree/dev/examples">examples in dev-branch</a>  </p>
+<h2>API</h2>
+<p>There are two main API access points you can use with pytter:</p>
+<h3>The <a href="client/client.m.html"><code>Client</code></a> API</h3>
+<p><a href="client/client.m.html"><code>Client</code></a> is a class that wraps around the  <a href="api/api.m.html"><code>APISession</code></a>.<br />
+It is an easy to use interface for using the Twitter API as intuitively as possible 
+by supplying amended function names, alias functions and sub-functions of API objects
+to inetract and work with them.</p>
+<p>So, you can create a <a href="objects/tweet.m.html"><code>Tweet</code></a> by using the following function:  </p>
+<div class="codehilite"><pre><span></span><span class="n">tweet</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">status_update</span><span class="p">(</span>
+    <span class="s1">&#39;Hey! This is a little test!&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>And later, you can delete the <a href="objects/tweet.m.html"><code>Tweet</code></a> using the sub-function <code>delete</code>:  </p>
+<div class="codehilite"><pre><span></span><span class="n">tweet</span><span class="p">.</span><span class="k">delete</span><span class="p">()</span>
+</pre></div>
+
+
+<p>You can use the same to fetch a tweet by its ID and then retweet this tweet:</p>
+<div class="codehilite"><pre><span></span><span class="n">tweet</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">status</span><span class="p">(</span><span class="s1">&#39;1142746872953671680&#39;</span><span class="p">)</span>
+<span class="n">retweet</span> <span class="o">=</span> <span class="n">tweet</span><span class="p">.</span><span class="n">retweet</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>The <a href="api/api.m.html"><code>APISession</code></a> API</h3>
+<p><a href="api/api.m.html"><code>APISession</code></a> is a barebone implementation of the Twitter API representing
+each API endpoint in the same naming syntax as function. Resulting objects will be also
+usable with the sub-functions named above due to architecture of the API wrapper. But if you
+are more confident using a raw API interface, the <a href="api/api.m.html"><code>APISession</code></a> class may be your
+way to go.</p>
+<p>Example:  </p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">pytter</span> <span class="kn">import</span> <span class="n">APISession</span><span class="p">,</span> <span class="n">Credentials</span>
+
+<span class="n">creds</span> <span class="o">=</span> <span class="n">Credentials</span><span class="p">(</span>
+    <span class="n">consumer_key</span><span class="o">=</span><span class="s1">&#39;yourConsumerKey&#39;</span><span class="p">,</span>
+    <span class="n">consumer_secret</span><span class="o">=</span><span class="s1">&#39;yourConsumerSecret&#39;</span><span class="p">,</span>
+    <span class="n">access_token_key</span><span class="o">=</span><span class="s1">&#39;yourAccessTokenKey,</span>
+    <span class="n">access_token_secret</span><span class="o">=</span><span class="s1">&#39;yourAccesTokenSecret&#39;</span><span class="p">)</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">(</span><span class="n">creds</span><span class="p">)</span>
+
+<span class="n">tweet</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">statuses_update</span><span class="p">(</span>
+    <span class="n">status</span><span class="o">=</span><span class="s1">&#39;Hey, this is a test Tweet!&#39;</span><span class="p">)</span>
+<span class="n">recovered</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">statuses_show</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">statuses_destroy</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">recovered</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+</pre></div>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter', this);">Show source &equiv;</a></p>
   <div id="source-pytter" class="source">
@@ -1099,35 +1149,84 @@ print('Tweet ID: {}'.format(tweet.id_str))
 <span class="sd">Media, Trends, Geo and Labs API and no Ads, Metrics,</span>
 <span class="sd">Premium or Enterprise API endpoints.</span>
 
-<span class="sd">***Usage Example**</span>
+<span class="sd">## Usage Example</span>
 
-<span class="sd">```python</span>
-<span class="sd">from pytter import Client, Credentials</span>
-
-<span class="sd">creds = Credentials(</span>
-<span class="sd">    consumer_key=&#39;yourConsumerKey&#39;,</span>
-<span class="sd">    consumer_secret=&#39;yourConsumerSecret&#39;,</span>
-<span class="sd">    access_token_key=&#39;yourAccessTokenKey,</span>
-<span class="sd">    access_token_secret=&#39;yourAccesTokenSecret&#39;)</span>
+<span class="sd">    from pytter import Client, Credentials</span>
 <span class="sd">    </span>
-<span class="sd">client = Client(creds)</span>
+<span class="sd">    creds = Credentials(</span>
+<span class="sd">        consumer_key=&#39;yourConsumerKey&#39;,</span>
+<span class="sd">        consumer_secret=&#39;yourConsumerSecret&#39;,</span>
+<span class="sd">        access_token_key=&#39;yourAccessTokenKey,</span>
+<span class="sd">        access_token_secret=&#39;yourAccesTokenSecret&#39;)</span>
+<span class="sd">        </span>
+<span class="sd">    client = Client(creds)</span>
+<span class="sd">    </span>
+<span class="sd">    tweet = client.status_update(&#39;Hey Twitter API!&#39;)</span>
+<span class="sd">    print(&#39;Tweet ID: {}&#39;.format(tweet.id_str))</span>
 
-<span class="sd">tweet = client.status_update(&#39;Hey Twitter API!&#39;)</span>
-<span class="sd">print(&#39;Tweet ID: {}&#39;.format(tweet.id_str))</span>
-<span class="sd">```</span>
 
-<span class="sd">Here you can find more examples using pytter:</span>
-<span class="sd">- [examples in master-branch](https://github.com/zekroTJA/pytter/tree/master/examples)</span>
-<span class="sd">- [examples in dev-branch](https://github.com/zekroTJA/pytter/tree/dev/examples)</span>
+<span class="sd">Here you can find more examples using pytter:  </span>
+<span class="sd">- [examples in master-branch](https://github.com/zekroTJA/pytter/tree/master/examples)  </span>
+<span class="sd">- [examples in dev-branch](https://github.com/zekroTJA/pytter/tree/dev/examples)  </span>
+
+<span class="sd">## API</span>
+
+<span class="sd">There are two main API access points you can use with pytter:</span>
+
+<span class="sd">### The [`Client`](client/client.m.html) API</span>
+
+<span class="sd">[`Client`](client/client.m.html) is a class that wraps around the  [`APISession`](api/api.m.html).  </span>
+<span class="sd">It is an easy to use interface for using the Twitter API as intuitively as possible </span>
+<span class="sd">by supplying amended function names, alias functions and sub-functions of API objects</span>
+<span class="sd">to inetract and work with them.</span>
+
+<span class="sd">So, you can create a [`Tweet`](objects/tweet.m.html) by using the following function:  </span>
+
+<span class="sd">    tweet = client.status_update(</span>
+<span class="sd">        &#39;Hey! This is a little test!&#39;)</span>
+
+<span class="sd">And later, you can delete the [`Tweet`](objects/tweet.m.html) using the sub-function `delete`:  </span>
+
+<span class="sd">    tweet.delete()</span>
+
+<span class="sd">You can use the same to fetch a tweet by its ID and then retweet this tweet:</span>
+
+<span class="sd">    tweet = client.status(&#39;1142746872953671680&#39;)</span>
+<span class="sd">    retweet = tweet.retweet()</span>
+
+<span class="sd">### The [`APISession`](api/api.m.html) API</span>
+
+<span class="sd">[`APISession`](api/api.m.html) is a barebone implementation of the Twitter API representing</span>
+<span class="sd">each API endpoint in the same naming syntax as function. Resulting objects will be also</span>
+<span class="sd">usable with the sub-functions named above due to architecture of the API wrapper. But if you</span>
+<span class="sd">are more confident using a raw API interface, the [`APISession`](api/api.m.html) class may be your</span>
+<span class="sd">way to go.</span>
+
+<span class="sd">Example:  </span>
+
+<span class="sd">    from pytter import APISession, Credentials</span>
+
+<span class="sd">    creds = Credentials(</span>
+<span class="sd">        consumer_key=&#39;yourConsumerKey&#39;,</span>
+<span class="sd">        consumer_secret=&#39;yourConsumerSecret&#39;,</span>
+<span class="sd">        access_token_key=&#39;yourAccessTokenKey,</span>
+<span class="sd">        access_token_secret=&#39;yourAccesTokenSecret&#39;)</span>
+
+<span class="sd">    session = APISession(creds)</span>
+
+<span class="sd">    tweet = session.statuses_update(</span>
+<span class="sd">        status=&#39;Hey, this is a test Tweet!&#39;)</span>
+<span class="sd">    recovered = session.statuses_show(id=tweet.id_str)</span>
+<span class="sd">    session.statuses_destroy(id=recovered.id_str)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="n">__title__</span> <span class="o">=</span> <span class="s1">&#39;pytter&#39;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;zekro&#39;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;Apache Licence 2.0&#39;</span>
+<span class="n">__title__</span>     <span class="o">=</span> <span class="s1">&#39;pytter&#39;</span>
+<span class="n">__author__</span>    <span class="o">=</span> <span class="s1">&#39;zekro&#39;</span>
+<span class="n">__version__</span>   <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;Apache Licence 2.0&#39;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;(c) 2019 Ringo Hoffmann (zekro Development)&#39;</span>
-<span class="n">__url__</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/zekrotja/pytter&#39;</span>
+<span class="n">__url__</span>       <span class="o">=</span> <span class="s1">&#39;https://github.com/zekrotja/pytter&#39;</span>
 
 <span class="kn">from</span> <span class="nn">.client</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>

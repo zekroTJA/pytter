@@ -237,6 +237,8 @@ class Client:
         Returns a list of up to 100 retweet objects
         of the passed tweet.
 
+        **Parameters**
+
         - `id: [str, int]`  
           The ID of the Tweet to get the list of
           retweets from.

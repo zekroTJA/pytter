@@ -95,11 +95,40 @@ class APISession:
         return res.json()
 
     def cursor_request(self, resource_path: str, expected_key: str, count: int = 200, params: dict = {}) -> List[object]:
-        # TODO: docs
+        """
+        Issues cursored GET requests to the Twitter API follwoing
+        the respond cursor for next requests returning the entire
+        response objects as one array of objects.
+
+        **Parameters**
+
+        - `resource_path: str`  
+          Path to the requested resource (without root URI).
+          Leading '/' will be cut off.
+
+        - `expected_key: str`  
+          Key expected to be contained in the response grouping
+          all response objects.
+
+        - `count: int`  
+          Ammount of objects which will be requested at once.
+          Must be in range of [1, 200].
+
+        - `params: dict`  
+          Parameters passed to the single GET requests.
+
+        **Returns**
+
+        - `List[object]`  
+          List of concat objects expected in `expected_key`.
+        """
         
         results = []
         cursor = -1
         params['count'] = count
+
+        if count > 200 or count < 1:
+            raise ParameterOutOfBoundsException("must be in range of [1, 200]")
 
         while cursor is not 0:
             params['cursor'] = cursor
@@ -110,7 +139,6 @@ class APISession:
             cursor = res.get('next_cursor')
 
         return results
-        
 
     def obtain_user_context_token(self):
         """

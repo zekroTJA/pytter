@@ -95,14 +95,13 @@ class APISession:
         return res.json()
 
     def cursor_request(self, resource_path: str, expected_key: str, count: int = 200, params: dict = {}) -> List[object]:
-        # TODO: Docs
+        # TODO: docs
         
         results = []
         cursor = -1
         params['count'] = count
 
         while cursor is not 0:
-            print("CURSOR:", cursor)
             params['cursor'] = cursor
             res = self.request('GET', resource_path, params=params)
             data = res.get(expected_key)
@@ -849,5 +848,38 @@ class APISession:
             params['screen_name'] = screen_name
 
         results = self.cursor_request('followers/list.json', 'users', params=params)
+
+        return [User(r, self) for r in results]
+
+    def friends_ids(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[str]:
+        # TODO: docs
+
+        if not id and not screen_name:
+            raise ParameterNoneException()
+
+        params = kwargs
+        params['stringify_ids'] = True
+
+        if id:
+            params['user_id'] = id
+        if screen_name:
+            params['screen_name'] = screen_name
+
+        return self.cursor_request('friends/ids.json', 'ids', params=params)
+
+    def friends_list(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[User]:
+        # TODO: docs
+
+        if not id and not screen_name:
+            raise ParameterNoneException()
+
+        params = kwargs
+
+        if id:
+            params['user_id'] = id
+        if screen_name:
+            params['screen_name'] = screen_name
+
+        results = self.cursor_request('friends/list.json', 'users', params=params)
 
         return [User(r, self) for r in results]

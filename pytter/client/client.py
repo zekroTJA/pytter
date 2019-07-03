@@ -387,6 +387,36 @@ class Client:
             screen_names=screen_names,
             include_entities=include_entities)
 
+    def followers_ids(self, id: [str, int] = None, screen_name: str = None) -> List[str]:
+        # TODO: docs
+
+        return self._session.followers_ids(id=id, screen_name=screen_name)
+
+    def followers(self, 
+        id: [str, int] = None, 
+        screen_name: str = None,
+        skip_status: bool = True,
+        include_user_entities: bool = True) -> List[User]:
+        # TODO: docs
+
+        return self._session.followers_list(id=id, screen_name=screen_name,
+            skip_status=skip_status, include_user_entities=include_user_entities)
+
+    def following_ids(self, id: [str, int] = None, screen_name: str = None) -> List[str]:
+        # TODO: docs
+
+        return self._session.friends_ids(id=id, screen_name=screen_name)
+
+    def following(self, 
+        id: [str, int] = None, 
+        screen_name: str = None,
+        skip_status: bool = True,
+        include_user_entities: bool = True) -> List[User]:
+        # TODO: docs
+
+        return self._session.friends_list(id=id, screen_name=screen_name,
+            skip_status=skip_status, include_user_entities=include_user_entities)
+
     ###########
     # ALIASES #
     ###########

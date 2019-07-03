@@ -1,3 +1,4 @@
+from typing import List
 
 class NoSessionException(Exception):
     MESSAGE = 'session is not set to tweet instance'
@@ -40,3 +41,25 @@ class User:
         self.profile_image_url  = data.get('profile_image_url_https') or data.get('profile_image_url')
         self.profile_banner_url = data.get('profile_banner_url')
         self.stats              = UserStats(data=data, data_stats=data.get('stats') or {})
+
+    def followers_ids(self) -> List[str]:
+        # TODO: docs
+
+        return self._session.followers_ids(self.id or self.id_str)
+
+    def followers(self, skip_status: bool = True, include_user_entities: bool = True) -> List[object]:
+        # TODO: docs
+
+        return self._session.followers_list(self.id or self.id_str,
+            skip_status=skip_status, include_user_entities=include_user_entities)
+
+    def following_ids(self) -> List[str]:
+        # TODO: docs
+
+        return self._session.friends_ids(self.id or self.id_str)
+
+    def following(self, skip_status: bool = True, include_user_entities: bool = True) -> List[object]:
+        # TODO: docs
+
+        return self._session.friends_list(self.id or self.id_str,
+            skip_status=skip_status, include_user_entities=include_user_entities)

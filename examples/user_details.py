@@ -12,9 +12,17 @@ def main():
     
     client = Client(creds)
 
-    user_name = sys.argv[1] if len(sys.argv) > 1 else 'zekroTJA'
+    arg = sys.argv[1] if len(sys.argv) > 1 else 'zekroTJA'
 
-    user = client.user(screen_name=user_name)
+    id = None
+    name = None
+
+    if arg.startswith('id:'):
+        id = arg[3:]
+    else:
+        name = arg
+
+    user = client.user(screen_name=name, id=id)
 
     print((
         "\nUsername:      {}\n" +
@@ -24,7 +32,7 @@ def main():
         "Followers:     {}\n" +
         "Follows:       {}\n" +
         "Tweets:        {}\n" +
-        "Favourites:    {}"
+        "Favorites:     {}"
     ).format(
         user.username,
         user.name,
@@ -33,7 +41,7 @@ def main():
         user.stats.followers_count,
         user.stats.following_count,
         user.stats.tweet_count,
-        user.stats.favourites_count
+        user.stats.favorites_count
     ))
 
 

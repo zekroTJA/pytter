@@ -152,6 +152,8 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(users[u_2_id].username, u_2_id)
         self.assertEqual(users[u_2_id].username, u_2_id)
 
+    # TODO: add favorizing tests
+
 
 if __name__ == '__main__':
     unittest.main()

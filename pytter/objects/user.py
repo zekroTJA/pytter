@@ -15,7 +15,7 @@ class UserStats:
         self.following_count    = data.get('friends_count') or data_stats.get('following_count')
         self.tweet_count        = data.get('statuses_count') or data_stats.get('tweet_count')
         self.listed_count       = data.get('listed_count') or data_stats.get('listed_count')
-        self.favourites_count   = data.get('favourites_count') or data_stats.get('favourites_count')
+        self.favorites_count   = data.get('favourites_count') or data_stats.get('favourites_count')
 
 class User:
     """

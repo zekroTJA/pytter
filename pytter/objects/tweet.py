@@ -148,3 +148,35 @@ class Tweet:
             raise NoSessionException()
         
         return self._session.statuses_retweets(self.id or self.id_str, count=count)
+
+    def favorite(self) -> object:
+        """
+        Favorise (like) this Tweet.
+
+        **Returns**
+
+        - `Tweet`
+          This Tweet object.
+        """
+
+        if not self._session:
+            raise NoSessionException()
+
+        return self._session.favorites_create(self.id or self.id_str,
+            include_entities=True)
+
+    def unfavorite(self) -> object:
+        """
+        Unfavorise (unlike) this Tweet.
+
+        **Returns**
+
+        - `Tweet`  
+          This Tweet object.
+        """
+
+        if not self._session:
+            raise NoSessionException()
+
+        return self._session.favorites_destroy(self.id or self.id_str,
+            include_entities=True)

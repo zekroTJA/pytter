@@ -601,6 +601,10 @@ class APISession:
           Include user objects in result objects.  
           *Default: `True`*
 
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
         **Returns**
 
         - `List[Tweet]`  
@@ -629,6 +633,66 @@ class APISession:
 
         return [Tweet(r, self) for r in res]
 
+    #################
+    # FAVORITES API #
+    #################
+
+    def favorites_create(self, id: [str, int], **kwargs) -> Tweet:
+        """
+        Favorite (like) a Tweet by its specified ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          The ID of the desired Tweet to favorite/like.
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `Tweet`  
+          The favorized/liked Tweets object.
+        """
+
+        data = kwargs
+        data['id'] = id
+        
+        res = self.request('POST', 'favorites/create.json', data=data)
+        if not res:
+            raise NoneResponseException()
+
+        return Tweet(res, self)
+
+    def favorites_destroy(self, id: [str, int], **kwargs) -> Tweet:
+        """
+        Unfavorite (unlike) a liked Tweet by its specified ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          The ID of the desired liked tweet to 
+          unfavorite/unlike.
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `Tweet`  
+          The unfavorized/unliked Tweet object.
+        """
+
+        data = kwargs
+        data['id'] = id
+
+        res = self.request('POST', 'favorited/destroy.json', data=data)
+        if not res:
+            raise NoneResponseException()
+
+        return Tweet(res, self)
 
     #############
     # USERS API #

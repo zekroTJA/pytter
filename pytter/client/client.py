@@ -257,6 +257,54 @@ class Client:
 
         return self._session.statuses_retweets(id=tweet_id, count=count)
 
+    def favorite(self, tweet_id: [str, int], include_entities: bool = True) -> Tweet:
+        """
+        Favorite (like) a Tweet by its specified ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          The ID of the desired Tweet to favorite/like.
+
+        - `include_entities: bool`  
+          Wether or not to include Tweet entities
+          of the liked Tweet in the response object.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `Tweet`  
+          The favorized/liked Tweets object.
+        """
+
+        return self._session.favorites_create(
+            id=tweet_id, 
+            include_entities=include_entities)
+
+    def unfavorite(self, tweet_id: [str, int], include_entities: bool = True) -> Tweet:
+        """
+        Unfavorite (unlike) a Tweet by its specified ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          The ID of the desired Tweet to un- favorite/like.
+
+        - `include_entities: bool`  
+          Wether or not to include Tweet entities
+          of the Tweet in the response object.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `Tweet`  
+          The un- favorized/liked Tweets object.
+        """
+
+        return self._session.favorites_destroy(
+            id=tweet_id, 
+            include_entities=include_entities)
+
     #########
     # USERS #
     #########

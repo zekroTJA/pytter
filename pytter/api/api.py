@@ -847,7 +847,30 @@ class APISession:
         return users
 
     def followers_ids(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of user IDs (as strings) of all
+        followers of the user specified by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get followers list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          followers list from.  
+          *Default: `None`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `List[str]`  
+          List of IDs of all followers of the desired user.
+        """
 
         if not id and not screen_name:
             raise ParameterNoneException()
@@ -863,7 +886,31 @@ class APISession:
         return self.cursor_request('followers/ids.json', 'ids', params=params)
 
     def followers_list(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[User]:
-        # TODO: docs
+        """
+        Returns a list of User objects of the users
+        following the target user.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get followers list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          followers list from.  
+          *Default: `None`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `List[User]`  
+          List of User objects of all followers of 
+          the target user.
+        """
 
         if not id and not screen_name:
             raise ParameterNoneException()
@@ -880,7 +927,32 @@ class APISession:
         return [User(r, self) for r in results]
 
     def friends_ids(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of user IDs (as strings) of all
+        friends (the user is following) of the user 
+        specified by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get friends list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          friends list from.  
+          *Default: `None`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `List[str]`  
+          List of IDs of all friends of the desired user.
+        """
+
 
         if not id and not screen_name:
             raise ParameterNoneException()
@@ -896,7 +968,31 @@ class APISession:
         return self.cursor_request('friends/ids.json', 'ids', params=params)
 
     def friends_list(self, id: [str, int] = None, screen_name: str = None, **kwargs) -> List[User]:
-        # TODO: docs
+        """
+        Returns a list of User objects of the users
+        the target user is following (friends).
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get friends list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          friends list from.  
+          *Default: `None`*
+
+        - `**kwargs:`  
+          Additional agruments passed directly to the 
+          request parameters.
+
+        **Returns**
+
+        - `List[User]`  
+          List of User objects of all friends of 
+          the target user.
+        """
 
         if not id and not screen_name:
             raise ParameterNoneException()

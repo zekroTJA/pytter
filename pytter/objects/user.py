@@ -43,23 +43,57 @@ class User:
         self.stats              = UserStats(data=data, data_stats=data.get('stats') or {})
 
     def followers_ids(self) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of all IDs of the
+        users following this user.
+
+        **Returns**
+
+        - `List[str]`  
+          User IDs of following users.
+        """
 
         return self._session.followers_ids(self.id or self.id_str)
 
     def followers(self, skip_status: bool = True, include_user_entities: bool = True) -> List[object]:
-        # TODO: docs
+        """
+        Returns a list of all User objets
+        of the users follwoing this user.
+
+        **Returns**
+
+        - `List[User]`  
+          User objects of following users.
+        """
 
         return self._session.followers_list(self.id or self.id_str,
             skip_status=skip_status, include_user_entities=include_user_entities)
 
     def following_ids(self) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of all IDs of the
+        friends of this user (users this 
+        user is currently following).
+
+        **Returns**
+
+        - `List[str]`  
+          List of friends user IDs.
+        """
 
         return self._session.friends_ids(self.id or self.id_str)
 
     def following(self, skip_status: bool = True, include_user_entities: bool = True) -> List[object]:
-        # TODO: docs
+        """
+        Returns a list of all User objects of 
+        the friends of this user (users this 
+        user is currently following).
+
+        **Returns**
+
+        - `List[User]`  
+          List of friends User objects.
+        """
 
         return self._session.friends_list(self.id or self.id_str,
             skip_status=skip_status, include_user_entities=include_user_entities)

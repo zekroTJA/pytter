@@ -388,7 +388,26 @@ class Client:
             include_entities=include_entities)
 
     def followers_ids(self, id: [str, int] = None, screen_name: str = None) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of user IDs (as strings) of all
+        followers of the user specified by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get followers list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          followers list from.  
+          *Default: `None`*
+
+        **Returns**
+
+        - `List[str]`  
+          List of IDs of all followers of the desired user.
+        """
 
         return self._session.followers_ids(id=id, screen_name=screen_name)
 
@@ -397,13 +416,64 @@ class Client:
         screen_name: str = None,
         skip_status: bool = True,
         include_user_entities: bool = True) -> List[User]:
-        # TODO: docs
+        """
+        Returns a list of User objects of the users
+        following the target user.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get followers list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          followers list from.  
+          *Default: `None`*
+
+        - `skip_status: bool`  
+          Wether to show or not tweet objects in the
+          user objects if the reponse objects contain
+          any of them.  
+          *Default: `True`* 
+
+        - `include_user_entities: bool`  
+          Wether or not to include any user entities
+          if the response objects contain any of them.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `List[User]`  
+          List of User objects of all followers of 
+          the target user.
+        """
 
         return self._session.followers_list(id=id, screen_name=screen_name,
             skip_status=skip_status, include_user_entities=include_user_entities)
 
     def following_ids(self, id: [str, int] = None, screen_name: str = None) -> List[str]:
-        # TODO: docs
+        """
+        Returns a list of user IDs (as strings) of all
+        friends (the user is following) of the user 
+        specified by its ID.
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get friends list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          friends list from.  
+          *Default: `None`*
+
+        **Returns**
+
+        - `List[str]`  
+          List of IDs of all friends of the desired user.
+        """
 
         return self._session.friends_ids(id=id, screen_name=screen_name)
 
@@ -412,7 +482,38 @@ class Client:
         screen_name: str = None,
         skip_status: bool = True,
         include_user_entities: bool = True) -> List[User]:
-        # TODO: docs
+        """
+        Returns a list of User objects of the users
+        the target user is following (friends).
+
+        **Parameters**
+
+        - `id: [str, int]`  
+          ID of the user to get friends list from.  
+          *Default: `None`*
+
+        - `screen_name: str`  
+          Screen name (handle) of the user to get 
+          friends list from.  
+          *Default: `None`*
+
+        - `skip_status: bool`  
+          Wether to show or not tweet objects in the
+          user objects if the reponse objects contain
+          any of them.  
+          *Default: `True`* 
+
+        - `include_user_entities: bool`  
+          Wether or not to include any user entities
+          if the response objects contain any of them.  
+          *Default: `True`*
+
+        **Returns**
+
+        - `List[User]`  
+          List of User objects of all friends of 
+          the target user.
+        """
 
         return self._session.friends_list(id=id, screen_name=screen_name,
             skip_status=skip_status, include_user_entities=include_user_entities)

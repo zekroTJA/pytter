@@ -1050,6 +1050,13 @@ table {
           
   <ul>
     <li class="mono"><a href="#pytter.api.api.APISession.__init__">__init__</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.cursor_request">cursor_request</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.favorites_create">favorites_create</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.favorites_destroy">favorites_destroy</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.followers_ids">followers_ids</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.followers_list">followers_list</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.friends_ids">friends_ids</a></li>
+    <li class="mono"><a href="#pytter.api.api.APISession.friends_list">friends_list</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.obtain_user_context_token">obtain_user_context_token</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.request">request</a></li>
     <li class="mono"><a href="#pytter.api.api.APISession.statuses_destroy">statuses_destroy</a></li>
@@ -1183,6 +1190,52 @@ table {
 
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">cursor_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Issues cursored GET requests to the Twitter API follwoing</span>
+<span class="sd">        the respond cursor for next requests returning the entire</span>
+<span class="sd">        response objects as one array of objects.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `resource_path: str`  </span>
+<span class="sd">          Path to the requested resource (without root URI).</span>
+<span class="sd">          Leading &#39;/&#39; will be cut off.</span>
+
+<span class="sd">        - `expected_key: str`  </span>
+<span class="sd">          Key expected to be contained in the response grouping</span>
+<span class="sd">          all response objects.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          Ammount of objects which will be requested at once.</span>
+<span class="sd">          Must be in range of [1, 200].</span>
+
+<span class="sd">        - `params: dict`  </span>
+<span class="sd">          Parameters passed to the single GET requests.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[object]`  </span>
+<span class="sd">          List of concat objects expected in `expected_key`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s2">&quot;must be in range of [1, 200]&quot;</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">cursor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cursor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cursor</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">expected_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next_cursor&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
     <span class="k">def</span> <span class="nf">obtain_user_context_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Collect a user context bearer token</span>
@@ -1690,6 +1743,10 @@ table {
 <span class="sd">          Include user objects in result objects.  </span>
 <span class="sd">          *Default: `True`*</span>
 
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
 <span class="sd">        **Returns**</span>
 
 <span class="sd">        - `List[Tweet]`  </span>
@@ -1718,6 +1775,66 @@ table {
 
         <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
 
+    <span class="c1">#################</span>
+    <span class="c1"># FAVORITES API #</span>
+    <span class="c1">#################</span>
+
+    <span class="k">def</span> <span class="nf">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorite (like) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to favorite/like.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/create.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorite (unlike) a liked Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired liked tweet to </span>
+<span class="sd">          unfavorite/unlike.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The unfavorized/unliked Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/destroy.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="c1">#############</span>
     <span class="c1"># USERS API #</span>
@@ -1824,6 +1941,168 @@ table {
           <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">screen_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span>
 
         <span class="k">return</span> <span class="n">users</span>
+
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        followers of the user specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all followers of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        following the target user.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all followers of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        friends (the user is following) of the user </span>
+<span class="sd">        specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all friends of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        the target user is following (friends).</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all friends of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1928,6 +2207,52 @@ for authentication and authorization.</p>
 
         <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">cursor_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Issues cursored GET requests to the Twitter API follwoing</span>
+<span class="sd">        the respond cursor for next requests returning the entire</span>
+<span class="sd">        response objects as one array of objects.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `resource_path: str`  </span>
+<span class="sd">          Path to the requested resource (without root URI).</span>
+<span class="sd">          Leading &#39;/&#39; will be cut off.</span>
+
+<span class="sd">        - `expected_key: str`  </span>
+<span class="sd">          Key expected to be contained in the response grouping</span>
+<span class="sd">          all response objects.</span>
+
+<span class="sd">        - `count: int`  </span>
+<span class="sd">          Ammount of objects which will be requested at once.</span>
+<span class="sd">          Must be in range of [1, 200].</span>
+
+<span class="sd">        - `params: dict`  </span>
+<span class="sd">          Parameters passed to the single GET requests.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[object]`  </span>
+<span class="sd">          List of concat objects expected in `expected_key`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s2">&quot;must be in range of [1, 200]&quot;</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">cursor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cursor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cursor</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">expected_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next_cursor&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
     <span class="k">def</span> <span class="nf">obtain_user_context_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Collect a user context bearer token</span>
@@ -2435,6 +2760,10 @@ for authentication and authorization.</p>
 <span class="sd">          Include user objects in result objects.  </span>
 <span class="sd">          *Default: `True`*</span>
 
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
 <span class="sd">        **Returns**</span>
 
 <span class="sd">        - `List[Tweet]`  </span>
@@ -2463,6 +2792,66 @@ for authentication and authorization.</p>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">Tweet</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
 
+    <span class="c1">#################</span>
+    <span class="c1"># FAVORITES API #</span>
+    <span class="c1">#################</span>
+
+    <span class="k">def</span> <span class="nf">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorite (like) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to favorite/like.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/create.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorite (unlike) a liked Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired liked tweet to </span>
+<span class="sd">          unfavorite/unlike.</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The unfavorized/unliked Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/destroy.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="c1">#############</span>
     <span class="c1"># USERS API #</span>
@@ -2569,6 +2958,168 @@ for authentication and authorization.</p>
           <span class="n">users</span><span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">screen_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span>
 
         <span class="k">return</span> <span class="n">users</span>
+
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        followers of the user specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all followers of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        following the target user.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all followers of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        friends (the user is following) of the user </span>
+<span class="sd">        specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all friends of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        the target user is following (friends).</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `**kwargs:`  </span>
+<span class="sd">          Additional agruments passed directly to the </span>
+<span class="sd">          request parameters.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all friends of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -2649,6 +3200,503 @@ for authentication and authorization.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_oauth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_credentials</span><span class="o">.</span><span class="n">to_oauth1</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obtain_user_context_token</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.cursor_request">
+    <p>def <span class="ident">cursor_request</span>(</p><p>self, resource_path, expected_key, count=200, params={})</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Issues cursored GET requests to the Twitter API follwoing
+the respond cursor for next requests returning the entire
+response objects as one array of objects.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>resource_path: str</code><br />
+  Path to the requested resource (without root URI).
+  Leading '/' will be cut off.</p>
+</li>
+<li>
+<p><code>expected_key: str</code><br />
+  Key expected to be contained in the response grouping
+  all response objects.</p>
+</li>
+<li>
+<p><code>count: int</code><br />
+  Ammount of objects which will be requested at once.
+  Must be in range of [1, 200].</p>
+</li>
+<li>
+<p><code>params: dict</code><br />
+  Parameters passed to the single GET requests.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[object]</code><br />
+  List of concat objects expected in <code>expected_key</code>.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.cursor_request', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.cursor_request" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">cursor_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Issues cursored GET requests to the Twitter API follwoing</span>
+<span class="sd">    the respond cursor for next requests returning the entire</span>
+<span class="sd">    response objects as one array of objects.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `resource_path: str`  </span>
+<span class="sd">      Path to the requested resource (without root URI).</span>
+<span class="sd">      Leading &#39;/&#39; will be cut off.</span>
+<span class="sd">    - `expected_key: str`  </span>
+<span class="sd">      Key expected to be contained in the response grouping</span>
+<span class="sd">      all response objects.</span>
+<span class="sd">    - `count: int`  </span>
+<span class="sd">      Ammount of objects which will be requested at once.</span>
+<span class="sd">      Must be in range of [1, 200].</span>
+<span class="sd">    - `params: dict`  </span>
+<span class="sd">      Parameters passed to the single GET requests.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[object]`  </span>
+<span class="sd">      List of concat objects expected in `expected_key`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ParameterOutOfBoundsException</span><span class="p">(</span><span class="s2">&quot;must be in range of [1, 200]&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">cursor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cursor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cursor</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">expected_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;next_cursor&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.favorites_create">
+    <p>def <span class="ident">favorites_create</span>(</p><p>self, id, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Favorite (like) a Tweet by its specified ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the desired Tweet to favorite/like.</p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The favorized/liked Tweets object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.favorites_create', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.favorites_create" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Favorite (like) a Tweet by its specified ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the desired Tweet to favorite/like.</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The favorized/liked Tweets object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/create.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.favorites_destroy">
+    <p>def <span class="ident">favorites_destroy</span>(</p><p>self, id, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unfavorite (unlike) a liked Tweet by its specified ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the desired liked tweet to 
+  unfavorite/unlike.</p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The unfavorized/unliked Tweet object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.favorites_destroy', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.favorites_destroy" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unfavorite (unlike) a liked Tweet by its specified ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the desired liked tweet to </span>
+<span class="sd">      unfavorite/unlike.</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The unfavorized/unliked Tweet object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;favorites/destroy.json&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoneResponseException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Tweet</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.followers_ids">
+    <p>def <span class="ident">followers_ids</span>(</p><p>self, id=None, screen_name=None, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of user IDs (as strings) of all
+followers of the user specified by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  List of IDs of all followers of the desired user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.followers_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.followers_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of user IDs (as strings) of all</span>
+<span class="sd">    followers of the user specified by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      List of IDs of all followers of the desired user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.followers_list">
+    <p>def <span class="ident">followers_list</span>(</p><p>self, id=None, screen_name=None, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of User objects of the users
+following the target user.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  List of User objects of all followers of 
+  the target user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.followers_list', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.followers_list" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of User objects of the users</span>
+<span class="sd">    following the target user.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      List of User objects of all followers of </span>
+<span class="sd">      the target user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;followers/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.friends_ids">
+    <p>def <span class="ident">friends_ids</span>(</p><p>self, id=None, screen_name=None, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of user IDs (as strings) of all
+friends (the user is following) of the user 
+specified by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  List of IDs of all friends of the desired user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.friends_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.friends_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of user IDs (as strings) of all</span>
+<span class="sd">    friends (the user is following) of the user </span>
+<span class="sd">    specified by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      List of IDs of all friends of the desired user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;stringify_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/ids.json&#39;</span><span class="p">,</span> <span class="s1">&#39;ids&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.api.api.APISession.friends_list">
+    <p>def <span class="ident">friends_list</span>(</p><p>self, id=None, screen_name=None, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of User objects of the users
+the target user is following (friends).</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  List of User objects of all friends of 
+  the target user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.api.api.APISession.friends_list', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.api.api.APISession.friends_list" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of User objects of the users</span>
+<span class="sd">    the target user is following (friends).</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      List of User objects of all friends of </span>
+<span class="sd">      the target user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ParameterNoneException</span><span class="p">()</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">kwargs</span>
+    <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">id</span>
+    <span class="k">if</span> <span class="n">screen_name</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;screen_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">screen_name</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor_request</span><span class="p">(</span><span class="s1">&#39;friends/list.json&#39;</span><span class="p">,</span> <span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">User</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -3095,6 +4143,11 @@ user timeline.</p>
   Include user objects in result objects.<br />
 <em>Default: <code>True</code></em></p>
 </li>
+<li>
+<p><code>**kwargs:</code><br />
+  Additional agruments passed directly to the 
+  request parameters.</p>
+</li>
 </ul>
 <p><strong>Returns</strong></p>
 <ul>
@@ -3135,6 +4188,9 @@ user timeline.</p>
 <span class="sd">    - `include_user_entities: bool`  </span>
 <span class="sd">      Include user objects in result objects.  </span>
 <span class="sd">      *Default: `True`*</span>
+<span class="sd">    - `**kwargs:`  </span>
+<span class="sd">      Additional agruments passed directly to the </span>
+<span class="sd">      request parameters.</span>
 <span class="sd">    **Returns**</span>
 <span class="sd">    - `List[Tweet]`  </span>
 <span class="sd">      Result list of Tweet objects.</span>

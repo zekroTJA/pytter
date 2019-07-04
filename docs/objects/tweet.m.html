@@ -1060,9 +1060,11 @@ table {
   <ul>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.__init__">__init__</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.delete">delete</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.favorite">favorite</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.retweet">retweet</a></li>
     <li class="mono"><a href="#pytter.objects.tweet.Tweet.retweets">retweets</a></li>
-    <li class="mono"><a href="#pytter.objects.tweet.Tweet.un_retweet">un_retweet</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.unfavorite">unfavorite</a></li>
+    <li class="mono"><a href="#pytter.objects.tweet.Tweet.unretweet">unretweet</a></li>
   </ul>
 
         </li>
@@ -1195,7 +1197,7 @@ table {
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Revoke this retweet.</span>
 
@@ -1244,6 +1246,38 @@ table {
             <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorise (like) this Tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`</span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorise (unlike) this Tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1414,7 +1448,7 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Revoke this retweet.</span>
 
@@ -1463,6 +1497,38 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
             <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
         
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorise (like) this Tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`</span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorise (unlike) this Tweet.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          This Tweet object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1567,6 +1633,42 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
   
             
   <div class="item">
+    <div class="name def" id="pytter.objects.tweet.Tweet.favorite">
+    <p>def <span class="ident">favorite</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Favorise (like) this Tweet.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code>
+  This Tweet object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.favorite', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.favorite" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Favorise (like) this Tweet.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`</span>
+<span class="sd">      This Tweet object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+        <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="pytter.objects.tweet.Tweet.retweet">
     <p>def <span class="ident">retweet</span>(</p><p>self)</p>
     </div>
@@ -1658,8 +1760,44 @@ this tweet.</p>
   
             
   <div class="item">
-    <div class="name def" id="pytter.objects.tweet.Tweet.un_retweet">
-    <p>def <span class="ident">un_retweet</span>(</p><p>self, do_not_raise=False)</p>
+    <div class="name def" id="pytter.objects.tweet.Tweet.unfavorite">
+    <p>def <span class="ident">unfavorite</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unfavorise (unlike) this Tweet.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  This Tweet object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.unfavorite', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.unfavorite" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unfavorise (unlike) this Tweet.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      This Tweet object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoSessionException</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+        <span class="n">include_entities</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.tweet.Tweet.unretweet">
+    <p>def <span class="ident">unretweet</span>(</p><p>self, do_not_raise=False)</p>
     </div>
     
 
@@ -1678,9 +1816,9 @@ this tweet.</p>
   This Tweet object.</li>
 </ul></div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.un_retweet', this);">Show source &equiv;</a></p>
-  <div id="source-pytter.objects.tweet.Tweet.un_retweet" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">un_retweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.tweet.Tweet.unretweet', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.tweet.Tweet.unretweet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unretweet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_raise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Revoke this retweet.</span>
 <span class="sd">    **Parameters**</span>

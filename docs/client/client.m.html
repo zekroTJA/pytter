@@ -1050,6 +1050,11 @@ table {
           
   <ul>
     <li class="mono"><a href="#pytter.client.client.Client.__init__">__init__</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.favorite">favorite</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.followers">followers</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.followers_ids">followers_ids</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.following">following</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.following_ids">following_ids</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.session">session</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status">status</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.status_delete">status_delete</a></li>
@@ -1060,6 +1065,7 @@ table {
     <li class="mono"><a href="#pytter.client.client.Client.statuses">statuses</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.tweet">tweet</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.tweets">tweets</a></li>
+    <li class="mono"><a href="#pytter.client.client.Client.unfavorite">unfavorite</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.user">user</a></li>
     <li class="mono"><a href="#pytter.client.client.Client.users">users</a></li>
   </ul>
@@ -1343,6 +1349,54 @@ table {
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorite (like) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to favorite/like.</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Wether or not to include Tweet entities</span>
+<span class="sd">          of the liked Tweet in the response object.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+            <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorite (unlike) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to un- favorite/like.</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Wether or not to include Tweet entities</span>
+<span class="sd">          of the Tweet in the response object.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The un- favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+            <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+
     <span class="c1">#########</span>
     <span class="c1"># USERS #</span>
     <span class="c1">#########</span>
@@ -1424,6 +1478,137 @@ table {
             <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span>
             <span class="n">screen_names</span><span class="o">=</span><span class="n">screen_names</span><span class="p">,</span>
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        followers of the user specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all followers of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        following the target user.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `skip_status: bool`  </span>
+<span class="sd">          Wether to show or not tweet objects in the</span>
+<span class="sd">          user objects if the reponse objects contain</span>
+<span class="sd">          any of them.  </span>
+<span class="sd">          *Default: `True`* </span>
+
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Wether or not to include any user entities</span>
+<span class="sd">          if the response objects contain any of them.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all followers of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        friends (the user is following) of the user </span>
+<span class="sd">        specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all friends of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        the target user is following (friends).</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `skip_status: bool`  </span>
+<span class="sd">          Wether to show or not tweet objects in the</span>
+<span class="sd">          user objects if the reponse objects contain</span>
+<span class="sd">          any of them.  </span>
+<span class="sd">          *Default: `True`* </span>
+
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Wether or not to include any user entities</span>
+<span class="sd">          if the response objects contain any of them.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all friends of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
 
     <span class="c1">###########</span>
     <span class="c1"># ALIASES #</span>
@@ -1717,6 +1902,54 @@ around APISession.</p>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">statuses_retweets</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Favorite (like) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to favorite/like.</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Wether or not to include Tweet entities</span>
+<span class="sd">          of the liked Tweet in the response object.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+            <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unfavorite (unlike) a Tweet by its specified ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          The ID of the desired Tweet to un- favorite/like.</span>
+
+<span class="sd">        - `include_entities: bool`  </span>
+<span class="sd">          Wether or not to include Tweet entities</span>
+<span class="sd">          of the Tweet in the response object.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `Tweet`  </span>
+<span class="sd">          The un- favorized/liked Tweets object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+            <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+
     <span class="c1">#########</span>
     <span class="c1"># USERS #</span>
     <span class="c1">#########</span>
@@ -1799,6 +2032,137 @@ around APISession.</p>
             <span class="n">screen_names</span><span class="o">=</span><span class="n">screen_names</span><span class="p">,</span>
             <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        followers of the user specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all followers of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        following the target user.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          followers list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `skip_status: bool`  </span>
+<span class="sd">          Wether to show or not tweet objects in the</span>
+<span class="sd">          user objects if the reponse objects contain</span>
+<span class="sd">          any of them.  </span>
+<span class="sd">          *Default: `True`* </span>
+
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Wether or not to include any user entities</span>
+<span class="sd">          if the response objects contain any of them.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all followers of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of user IDs (as strings) of all</span>
+<span class="sd">        friends (the user is following) of the user </span>
+<span class="sd">        specified by its ID.</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of IDs of all friends of the desired user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+        <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+        <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+        <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of User objects of the users</span>
+<span class="sd">        the target user is following (friends).</span>
+
+<span class="sd">        **Parameters**</span>
+
+<span class="sd">        - `id: [str, int]`  </span>
+<span class="sd">          ID of the user to get friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `screen_name: str`  </span>
+<span class="sd">          Screen name (handle) of the user to get </span>
+<span class="sd">          friends list from.  </span>
+<span class="sd">          *Default: `None`*</span>
+
+<span class="sd">        - `skip_status: bool`  </span>
+<span class="sd">          Wether to show or not tweet objects in the</span>
+<span class="sd">          user objects if the reponse objects contain</span>
+<span class="sd">          any of them.  </span>
+<span class="sd">          *Default: `True`* </span>
+
+<span class="sd">        - `include_user_entities: bool`  </span>
+<span class="sd">          Wether or not to include any user entities</span>
+<span class="sd">          if the response objects contain any of them.  </span>
+<span class="sd">          *Default: `True`*</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of User objects of all friends of </span>
+<span class="sd">          the target user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+
     <span class="c1">###########</span>
     <span class="c1"># ALIASES #</span>
     <span class="c1">###########</span>
@@ -1844,6 +2208,349 @@ around APISession.</p>
   <div id="source-pytter.client.client.Client.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">credentials</span><span class="p">:</span> <span class="n">Credentials</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">APISession</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.favorite">
+    <p>def <span class="ident">favorite</span>(</p><p>self, tweet_id, include_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Favorite (like) a Tweet by its specified ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the desired Tweet to favorite/like.</p>
+</li>
+<li>
+<p><code>include_entities: bool</code><br />
+  Wether or not to include Tweet entities
+  of the liked Tweet in the response object.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The favorized/liked Tweets object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.favorite', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.favorite" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">favorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Favorite (like) a Tweet by its specified ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the desired Tweet to favorite/like.</span>
+<span class="sd">    - `include_entities: bool`  </span>
+<span class="sd">      Wether or not to include Tweet entities</span>
+<span class="sd">      of the liked Tweet in the response object.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The favorized/liked Tweets object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_create</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+        <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.followers">
+    <p>def <span class="ident">followers</span>(</p><p>self, id=None, screen_name=None, skip_status=True, include_user_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of User objects of the users
+following the target user.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>skip_status: bool</code><br />
+  Wether to show or not tweet objects in the
+  user objects if the reponse objects contain
+  any of them.<br />
+<em>Default: <code>True</code></em> </p>
+</li>
+<li>
+<p><code>include_user_entities: bool</code><br />
+  Wether or not to include any user entities
+  if the response objects contain any of them.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  List of User objects of all followers of 
+  the target user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.followers', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.followers" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+    <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of User objects of the users</span>
+<span class="sd">    following the target user.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `skip_status: bool`  </span>
+<span class="sd">      Wether to show or not tweet objects in the</span>
+<span class="sd">      user objects if the reponse objects contain</span>
+<span class="sd">      any of them.  </span>
+<span class="sd">      *Default: `True`* </span>
+<span class="sd">    - `include_user_entities: bool`  </span>
+<span class="sd">      Wether or not to include any user entities</span>
+<span class="sd">      if the response objects contain any of them.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      List of User objects of all followers of </span>
+<span class="sd">      the target user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.followers_ids">
+    <p>def <span class="ident">followers_ids</span>(</p><p>self, id=None, screen_name=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of user IDs (as strings) of all
+followers of the user specified by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  followers list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  List of IDs of all followers of the desired user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.followers_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.followers_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of user IDs (as strings) of all</span>
+<span class="sd">    followers of the user specified by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      followers list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      List of IDs of all followers of the desired user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.following">
+    <p>def <span class="ident">following</span>(</p><p>self, id=None, screen_name=None, skip_status=True, include_user_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of User objects of the users
+the target user is following (friends).</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>skip_status: bool</code><br />
+  Wether to show or not tweet objects in the
+  user objects if the reponse objects contain
+  any of them.<br />
+<em>Default: <code>True</code></em> </p>
+</li>
+<li>
+<p><code>include_user_entities: bool</code><br />
+  Wether or not to include any user entities
+  if the response objects contain any of them.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  List of User objects of all friends of 
+  the target user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.following', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.following" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
+    <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of User objects of the users</span>
+<span class="sd">    the target user is following (friends).</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `skip_status: bool`  </span>
+<span class="sd">      Wether to show or not tweet objects in the</span>
+<span class="sd">      user objects if the reponse objects contain</span>
+<span class="sd">      any of them.  </span>
+<span class="sd">      *Default: `True`* </span>
+<span class="sd">    - `include_user_entities: bool`  </span>
+<span class="sd">      Wether or not to include any user entities</span>
+<span class="sd">      if the response objects contain any of them.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      List of User objects of all friends of </span>
+<span class="sd">      the target user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.following_ids">
+    <p>def <span class="ident">following_ids</span>(</p><p>self, id=None, screen_name=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of user IDs (as strings) of all
+friends (the user is following) of the user 
+specified by its ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  ID of the user to get friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+<li>
+<p><code>screen_name: str</code><br />
+  Screen name (handle) of the user to get 
+  friends list from.<br />
+<em>Default: <code>None</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  List of IDs of all friends of the desired user.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.following_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.following_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">screen_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of user IDs (as strings) of all</span>
+<span class="sd">    friends (the user is following) of the user </span>
+<span class="sd">    specified by its ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      ID of the user to get friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    - `screen_name: str`  </span>
+<span class="sd">      Screen name (handle) of the user to get </span>
+<span class="sd">      friends list from.  </span>
+<span class="sd">      *Default: `None`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      List of IDs of all friends of the desired user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span> <span class="n">screen_name</span><span class="o">=</span><span class="n">screen_name</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2399,6 +3106,61 @@ object, if found. Else, the value will be <code>None</code>.</p>
 <span class="sd">    Alias for Client#statuses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">statuses</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.client.client.Client.unfavorite">
+    <p>def <span class="ident">unfavorite</span>(</p><p>self, tweet_id, include_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unfavorite (unlike) a Tweet by its specified ID.</p>
+<p><strong>Parameters</strong></p>
+<ul>
+<li>
+<p><code>id: [str, int]</code><br />
+  The ID of the desired Tweet to un- favorite/like.</p>
+</li>
+<li>
+<p><code>include_entities: bool</code><br />
+  Wether or not to include Tweet entities
+  of the Tweet in the response object.<br />
+<em>Default: <code>True</code></em></p>
+</li>
+</ul>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>Tweet</code><br />
+  The un- favorized/liked Tweets object.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.client.client.Client.unfavorite', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.client.client.Client.unfavorite" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unfavorite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tweet_id</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">include_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tweet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unfavorite (unlike) a Tweet by its specified ID.</span>
+<span class="sd">    **Parameters**</span>
+<span class="sd">    - `id: [str, int]`  </span>
+<span class="sd">      The ID of the desired Tweet to un- favorite/like.</span>
+<span class="sd">    - `include_entities: bool`  </span>
+<span class="sd">      Wether or not to include Tweet entities</span>
+<span class="sd">      of the Tweet in the response object.  </span>
+<span class="sd">      *Default: `True`*</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `Tweet`  </span>
+<span class="sd">      The un- favorized/liked Tweets object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">favorites_destroy</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="n">tweet_id</span><span class="p">,</span> 
+        <span class="n">include_entities</span><span class="o">=</span><span class="n">include_entities</span><span class="p">)</span>
 </pre></div>
 
   </div>

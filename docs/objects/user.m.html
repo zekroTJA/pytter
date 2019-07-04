@@ -1059,6 +1059,10 @@ table {
           
   <ul>
     <li class="mono"><a href="#pytter.objects.user.User.__init__">__init__</a></li>
+    <li class="mono"><a href="#pytter.objects.user.User.followers">followers</a></li>
+    <li class="mono"><a href="#pytter.objects.user.User.followers_ids">followers_ids</a></li>
+    <li class="mono"><a href="#pytter.objects.user.User.following">following</a></li>
+    <li class="mono"><a href="#pytter.objects.user.User.following_ids">following_ids</a></li>
   </ul>
 
         </li>
@@ -1090,42 +1094,105 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user', this);">Show source &equiv;</a></p>
   <div id="source-pytter.objects.user" class="source">
-    <div class="codehilite"><pre><span></span><span class="n">lass</span> <span class="n">NoSessionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-   <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;session is not set to tweet instance&#39;</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
-<span class="n">lass</span> <span class="n">UserStats</span><span class="p">:</span>
-   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   Representing user statistics like follower count,</span>
-<span class="sd">   following count, tweet cound and listed count.</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">data_stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">followers_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;friends_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">tweet_count</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statuses_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tweet_count&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">listed_count</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">favourites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
-<span class="n">lass</span> <span class="n">User</span><span class="p">:</span>
-   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">   User object.</span>
-<span class="sd">   Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object</span>
-<span class="sd">   &quot;&quot;&quot;</span>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">session</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">id</span>                 <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>             <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">screen_name</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;screen_name&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">location</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">url</span>                <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">description</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">protected</span>          <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;protected&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">verified</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verified&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>         <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;screen_name&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">profile_image_url</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url_https&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">profile_banner_url</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_banner_url&#39;</span><span class="p">)</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>              <span class="o">=</span> <span class="n">UserStats</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">data_stats</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span>
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="k">class</span> <span class="nc">NoSessionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">MESSAGE</span> <span class="o">=</span> <span class="s1">&#39;session is not set to tweet instance&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MESSAGE</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">UserStats</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Representing user statistics like follower count,</span>
+<span class="sd">    following count, tweet cound and listed count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">data_stats</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">followers_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;followers_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;friends_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tweet_count</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statuses_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tweet_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listed_count</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">favorites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    User object.</span>
+<span class="sd">    Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/user-object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">session</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span>                 <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span>             <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;id_str&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>               <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">screen_name</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;screen_name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span>                <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">protected</span>          <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;protected&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verified</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verified&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">created_at</span>         <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;created_at&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span>           <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;screen_name&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile_image_url</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url_https&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile_banner_url</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_banner_url&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>              <span class="o">=</span> <span class="n">UserStats</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">data_stats</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span>
+
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all IDs of the</span>
+<span class="sd">        users following this user.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          User IDs of following users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all User objets</span>
+<span class="sd">        of the users follwoing this user.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          User objects of following users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all IDs of the</span>
+<span class="sd">        friends of this user (users this </span>
+<span class="sd">        user is currently following).</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of friends user IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all User objects of </span>
+<span class="sd">        the friends of this user (users this </span>
+<span class="sd">        user is currently following).</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of friends User objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1242,6 +1309,62 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_image_url</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url_https&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile_banner_url</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_banner_url&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>              <span class="o">=</span> <span class="n">UserStats</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">data_stats</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span>
+
+    <span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all IDs of the</span>
+<span class="sd">        users following this user.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          User IDs of following users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all User objets</span>
+<span class="sd">        of the users follwoing this user.</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          User objects of following users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all IDs of the</span>
+<span class="sd">        friends of this user (users this </span>
+<span class="sd">        user is currently following).</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[str]`  </span>
+<span class="sd">          List of friends user IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of all User objects of </span>
+<span class="sd">        the friends of this user (users this </span>
+<span class="sd">        user is currently following).</span>
+
+<span class="sd">        **Returns**</span>
+
+<span class="sd">        - `List[User]`  </span>
+<span class="sd">          List of friends User objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+            <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1284,6 +1407,152 @@ Reference: https://developer.twitter.com/en/docs/tweets/data-dictionary/overview
     <span class="bp">self</span><span class="o">.</span><span class="n">profile_image_url</span>  <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url_https&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_image_url&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">profile_banner_url</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;profile_banner_url&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">stats</span>              <span class="o">=</span> <span class="n">UserStats</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">data_stats</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.user.User.followers">
+    <p>def <span class="ident">followers</span>(</p><p>self, skip_status=True, include_user_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of all User objets
+of the users follwoing this user.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  User objects of following users.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.User.followers', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.user.User.followers" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all User objets</span>
+<span class="sd">    of the users follwoing this user.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      User objects of following users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.user.User.followers_ids">
+    <p>def <span class="ident">followers_ids</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of all IDs of the
+users following this user.</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  User IDs of following users.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.User.followers_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.user.User.followers_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all IDs of the</span>
+<span class="sd">    users following this user.</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      User IDs of following users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">followers_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.user.User.following">
+    <p>def <span class="ident">following</span>(</p><p>self, skip_status=True, include_user_entities=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of all User objects of 
+the friends of this user (users this 
+user is currently following).</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[User]</code><br />
+  List of friends User objects.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.User.following', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.user.User.following" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">following</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_status</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">object</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all User objects of </span>
+<span class="sd">    the friends of this user (users this </span>
+<span class="sd">    user is currently following).</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[User]`  </span>
+<span class="sd">      List of friends User objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">,</span>
+        <span class="n">skip_status</span><span class="o">=</span><span class="n">skip_status</span><span class="p">,</span> <span class="n">include_user_entities</span><span class="o">=</span><span class="n">include_user_entities</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="pytter.objects.user.User.following_ids">
+    <p>def <span class="ident">following_ids</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Returns a list of all IDs of the
+friends of this user (users this 
+user is currently following).</p>
+<p><strong>Returns</strong></p>
+<ul>
+<li><code>List[str]</code><br />
+  List of friends user IDs.</li>
+</ul></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pytter.objects.user.User.following_ids', this);">Show source &equiv;</a></p>
+  <div id="source-pytter.objects.user.User.following_ids" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">following_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all IDs of the</span>
+<span class="sd">    friends of this user (users this </span>
+<span class="sd">    user is currently following).</span>
+<span class="sd">    **Returns**</span>
+<span class="sd">    - `List[str]`  </span>
+<span class="sd">      List of friends user IDs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">friends_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_str</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1455,7 +1724,7 @@ following count, tweet cound and listed count.</p></div>
         <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;friends_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tweet_count</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statuses_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tweet_count&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">listed_count</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">favourites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">favorites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1487,7 +1756,7 @@ following count, tweet cound and listed count.</p></div>
     <span class="bp">self</span><span class="o">.</span><span class="n">following_count</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;friends_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;following_count&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tweet_count</span>        <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;statuses_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tweet_count&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">listed_count</span>       <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;listed_count&#39;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">favourites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">favorites_count</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;favourites_count&#39;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1497,7 +1766,7 @@ following count, tweet cound and listed count.</p></div>
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="pytter.objects.user.UserStats.favourites_count" class="name">var <span class="ident">favourites_count</span></p>
+            <p id="pytter.objects.user.UserStats.favorites_count" class="name">var <span class="ident">favorites_count</span></p>
             
 
             

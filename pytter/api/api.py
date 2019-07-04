@@ -734,7 +734,7 @@ class APISession:
         data = kwargs
         data['id'] = id
 
-        res = self.request('POST', 'favorited/destroy.json', data=data)
+        res = self.request('POST', 'favorites/destroy.json', data=data)
         if not res:
             raise NoneResponseException()
 

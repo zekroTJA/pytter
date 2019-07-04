@@ -99,7 +99,7 @@ class Tweet:
 
         return self._session.statuses_retweet(self.id or self.id_str)
 
-    def un_retweet(self, do_not_raise: bool = False) -> object:
+    def unretweet(self, do_not_raise: bool = False) -> object:
         """
         Revoke this retweet.
 

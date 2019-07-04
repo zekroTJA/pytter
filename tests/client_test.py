@@ -14,6 +14,12 @@ def wait_rand():
     print('=== WAITING {} SECONDS BEFORE EXECUTING TEST ==='.format(r))
     time.sleep(r)
 
+def rand_str(ln: int = 140, chars: str = None) -> str:
+    if not chars:
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+    return ''.join([chars[randint(0, len(chars)-1)] for _ in range(ln)])
+
+
 class ClientTest(unittest.TestCase):
     
     TEST_IMG            = 'https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.golang.org%2Fgophergala%2Ffancygopher.jpg'
@@ -69,7 +75,7 @@ class ClientTest(unittest.TestCase):
         if self.travis_mode: wait_rand()
 
         client = Client(self.credentials)
-        res = client.status_update(self.TEST_CTX)
+        res = client.status_update(rand_str())
         self.assertIsNotNone(res)
         self.sent_tweets.append(res)
         rec = client.status(res.id)
@@ -79,9 +85,9 @@ class ClientTest(unittest.TestCase):
         if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
-        res_t1 = client.status_update('my tweet 1')
+        res_t1 = client.status_update(rand_str())
         self.sent_tweets.append(res_t1)
-        res_t2 = client.status_update('my tweet 2')
+        res_t2 = client.status_update(rand_str())
         self.sent_tweets.append(res_t2)
         rec = client.statuses((res_t1.id, res_t2.id, 1231231))
         print(res_t1.id, res_t2.id, rec)
@@ -95,24 +101,37 @@ class ClientTest(unittest.TestCase):
         if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
-        o_t = client.status_update('this will be retweeted by me!')
+        o_t = client.status_update(rand_str())
         self.sent_tweets.append(o_t)
         rt = o_t.retweet()
         self.assertIsNotNone(rt)
-        rt.un_retweet()
+        rt.unretweet()
         self.assertIsNotNone(rt)
 
     def test_retweets(self):
         if self.travis_mode: wait_rand()
         
         client = Client(self.credentials)
-        o_t = client.status_update('and this will also be retweeted by me!')
+        o_t = client.status_update(rand_str())
         self.sent_tweets.append(o_t)
         o_t.retweet()
         rts = o_t.retweets()
         self.assertIsNotNone(rts)
         self.assertEqual(len(rts), 1)
         # TODO: expand test
+
+    def test_favorite_unfavorite(self): 
+        if self.travis_mode: wait_rand()
+        
+        client = Client(self.credentials)
+        o_t = client.status_update(rand_str())
+        self.sent_tweets.append(o_t)
+        r_t = o_t.favorite()
+        self.assertIsNotNone(r_t)
+        self.assertEqual(o_t.text, r_t.text)
+        r_t_2 = r_t.unfavorite()
+        self.assertIsNotNone(r_t_2)
+        self.assertEqual(o_t.text, r_t_2.text)
 
     def test_user(self):
         if self.travis_mode: wait_rand()

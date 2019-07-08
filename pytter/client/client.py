@@ -309,6 +309,31 @@ class Client:
     # USERS #
     #########
 
+    def me(self, include_entities: bool = True, skip_status: bool = True) -> User:
+        """
+        Returns self user object of the authenticated user.
+
+        **Parameters**
+
+        - `include_entities: bool`  
+          Wether or not to include user entities
+          in the response object.  
+          *Default: `True`*
+
+        - `skip_status: bool`  
+          Wether or not to include the last recent status
+          of the user in the response object.
+
+        **Returns**
+
+        - `User`  
+          Self user object.
+        """
+
+        return self._session.verify_credentials(
+            include_entities=include_entities,
+            skip_status=skip_status)
+
     def user(self, 
         id: [str, int] = None, 
         screen_name: str = None,

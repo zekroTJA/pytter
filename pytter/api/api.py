@@ -50,6 +50,8 @@ class APISession:
         else:
             self.obtain_user_context_token()
 
+        self.verify_credentials()
+
     ############################
     # GENERAL REQUEST HANDLING #
     ############################
@@ -170,6 +172,31 @@ class APISession:
         body = res.json()
 
         self._oauth = OAuth2(token=body)
+
+    def verify_credentials(self, **kwargs):
+        """
+        Checks credentials by executing a request to
+        self user resource, which will be returned 
+        on success.
+
+        **Parameters**
+
+        - `**kwargs`  
+          Additional keyword arguments which will be directly
+          passed to the request arguments.
+
+        **Returns**
+
+        - `User`  
+          Self user object.
+        """
+
+        data = kwargs
+        res = self.request('GET', 'account/verify_credentials.json', params=data)
+        if not res:
+            raise NoneResponseException()
+        
+        return User(res, self)
 
     ##############
     # UPLOAD API #
@@ -374,9 +401,6 @@ class APISession:
         - `**kwargs`  
           Additional keyword arguments which will be directly
           passed to the request arguments.
-          You should only use valid arguments supported by the
-          POST statuses/update endpoint:
-          https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
 
         **Returns**
 

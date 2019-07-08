@@ -372,7 +372,7 @@ class APISession:
             if not max_attachable:
                 max_attachable = i
 
-        if max_attachable and max_attachable > len(media):
+        if max_attachable and len(media) > max_attachable:
             raise Exception('you can only attach up to {} files using this attachment type.'
                 .format(max_attachable))
 

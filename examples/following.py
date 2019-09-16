@@ -19,15 +19,15 @@ def main():
     
     client = Client(creds)
 
-    arg = sys.argv[1] if len(sys.argv) > 1 else 'zekroTJA'
+#    arg = sys.argv[1] if len(sys.argv) > 1 else 'zekroTJA'
 
     id = None
-    name = None
+    name = 'zekroTJA'
 
-    if arg.startswith('id:'):
-        id = arg[3:]
-    else:
-        name = arg
+#    if arg.startswith('id:'):
+#        id = arg[3:]
+#    else:
+#        name = arg
 
     folls = client.user(screen_name=name, id=id).following()
 

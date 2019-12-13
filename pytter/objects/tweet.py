@@ -180,3 +180,74 @@ class Tweet:
 
         return self._session.favorites_destroy(self.id or self.id_str,
             include_entities=True)
+
+
+    def reply(self, 
+        text: str, 
+        media: list = [],
+        possibly_sensitive: bool = False,
+        lat: float = None,
+        long: float = None,
+        place: [Place, int, str] = None,
+        display_coordinates: bool = False) -> Tweet:
+        """
+        Send a tweet as reply to the current tweet.
+        The mentions of the recipients of the tweet are
+        automatically populated from the origin tweet.
+
+        **Parameters**
+
+        - `text: str`  
+          The text content of the tweet.
+
+        - `media: list`  
+          A list of media links which will be attached
+          to the tweet. These can be a path to a local
+          file, an URI to an online file which will be 
+          downloaded or a already created FileInfo 
+          object.
+          *Default: `[]`*
+        
+        - `possibly_sensitive: bool`  
+          Wether the tweet contains any sensitive content
+          such as nudity or medical procedures.
+          *Default: `False`*
+
+        - `lat: float`  
+          The latitude of the location where the tweet
+          referes to. This must be a number between -90
+          and 90 and will be ignored if `long` parameter
+          is not passed.
+          *Default: `None`*
+
+        - `long: float`  
+          The longitude of the location where the tweet
+          referes to. THis must be a value between -180
+          and 180 and will be ignored if `lat` parameter
+          is not passed.
+          *Default: `None`*
+
+        - `place: [Place, str]`  
+          A place the tweet referes to. This can be a place
+          object or a place ID as string.
+          *Default: `None`*
+
+        - `display_coordinates: bool`  
+          Wether or not to display coordinates in tweet.
+          *Default: `False`*
+
+        **Returns**
+
+        - `Tweet`  
+          The resulting Tweet object.
+        """
+        return self._session.statuses_update(
+            status=text, 
+            media=media,
+            possibly_sensitive=possibly_sensitive,
+            lat=lat,
+            long=long,
+            place=((place.id if type(place) == Place else place) if place else None),
+            display_coordinates=display_coordinates,
+            auto_populate_reply_metadata=True,
+            in_reply_to_status_id=self.id)

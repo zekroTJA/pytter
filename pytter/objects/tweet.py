@@ -189,7 +189,7 @@ class Tweet:
         lat: float = None,
         long: float = None,
         place: [Place, int, str] = None,
-        display_coordinates: bool = False) -> Tweet:
+        display_coordinates: bool = False) -> object:
         """
         Send a tweet as reply to the current tweet.
         The mentions of the recipients of the tweet are

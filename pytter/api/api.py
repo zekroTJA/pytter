@@ -124,7 +124,7 @@ class APISession:
         - `List[object]`  
           List of concat objects expected in `expected_key`.
         """
-        
+     
         results = []
         cursor = -1
         params['count'] = count
@@ -132,7 +132,7 @@ class APISession:
         if count > 200 or count < 1:
             raise ParameterOutOfBoundsException("must be in range of [1, 200]")
 
-        while cursor is not 0:
+        while cursor != 0:
             params['cursor'] = cursor
             res = self.request('GET', resource_path, params=params)
             data = res.get(expected_key)

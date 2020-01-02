@@ -39,6 +39,11 @@ jobs:
       #     flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Test with pytest
+        env:
+          tw_consumer_key: ${{ secrets.TWITTER_KEY }}
+          tw_consumer_secret: ${{ secrets.TWITTER_SECRET }}
+          tw_access_token_key: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          tw_access_token_secret: ${{ secrets.TWITTER_ACCESS_SECRET }}
         run: |
           pip install -e .
           python -m unittest tests/*.py -v
